@@ -13,10 +13,10 @@
     <link rel="dns-prefetch" href="//fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=Nunito" rel="stylesheet">
 
-    <!-- Styles -->
+    <!-- Styles To change background color-->
     <style>
         body {
-            background: linear-gradient(to right, #FF0000 , #8000FF); /* Gradient from left to right */
+            background: linear-gradient(to bottom, #FF0000 , #8000FF); /* Gradient from left to right */
             min-height: 100vh;
             margin: 0;
             display: flex;
