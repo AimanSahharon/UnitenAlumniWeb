@@ -7,16 +7,26 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ config('app.name', 'Laravel') }}</title>
+    <title>
+        @if (request()->is('profile')) Profile
+        @elseif (request()->is('mycard')) MyCard
+        @elseif (request()->is('home')) Home
+        @elseif (request()->is('benefits')) Benefits
+        @elseif (request()->is('alumnihub')) Alumni Hub
+        @else {{ config('app.name', 'Uniten Alumni') }}
+        @endif
+    </title>
+    
 
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=Nunito" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
-    <!-- Styles To change background color-->
+    <!-- Styles -->
     <style>
         body {
-            background: linear-gradient(to bottom, #FF0000 , #8000FF); /* Gradient from left to right */
+            background: linear-gradient(to bottom, #FF0000 , #8000FF);
             min-height: 100vh;
             margin: 0;
             display: flex;
@@ -25,6 +35,65 @@
         #app {
             flex: 1;
         }
+        .navbar {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            background-color: white;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            transition: top 0.3s ease-in-out; /* Smooth transition effect */
+        }
+        .bottom-navbar {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            background-color: white;
+            box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
+            padding: 10px 0;
+            overflow-x: auto; /* Enables horizontal scrolling */
+            white-space: nowrap; /* Prevents items from wrapping */
+            display: flex;
+            justify-content: flex-start;
+            padding: 10px;
+            scrollbar-width: thin; /* Hide scrollbar on Firefox */
+        }
+        .bottom-navbar::-webkit-scrollbar {
+            display: block; /* Ensure scrollbar is visible */
+            height: 5px; /* Set a small scrollbar height */
+        }
+
+
+        .bottom-navbar .container {
+            display: flex;
+            justify-content: center;
+            flex-wrap: nowrap; /* Prevent wrapping */
+            width: max-content; /* Ensure container fits all items */
+            gap: 20px;
+            
+        }
+        .bottom-navbar a {
+            display: flex;
+            align-items: center;
+            gap: 8px; /* Space between icon and text */
+            text-decoration: none;
+            color: black;
+            font-weight: bold;
+            padding: 10px;
+        }
+        .bottom-navbar i {
+            font-size: 18px; /* Adjust icon size */
+        }
+        .bottom-navbar a.active {
+        color: red; /* Change text color */
+        }
+
+        .bottom-navbar a.active i {
+            color: red; /* Change icon color */
+        }
+        
+
+
     </style>
 
     <!-- Scripts -->
@@ -32,11 +101,18 @@
 </head>
 <body>
     <div id="app">
-        <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
+        <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm sticky-top">
             <div class="container">
                 <a class="navbar-brand" href="{{ url('/') }}">
-                    {{ config('app.name', 'Laravel') }}
+                    @if (request()->is('profile')) Profile
+                    @elseif (request()->is('mycard')) MyCard
+                    @elseif (request()->is('home')) Home
+                    @elseif (request()->is('benefits')) Benefits
+                    @elseif (request()->is('alumnihub')) Alumni Hub
+                    @else {{ config('app.name', 'Uniten Alumni') }}
+                    @endif
                 </a>
+                
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
                     <span class="navbar-toggler-icon"></span>
                 </button>
@@ -86,5 +162,51 @@
             @yield('content')
         </main>
     </div>
+
+    <!-- This script is to make when user scroll down hide the top navigation bar, when user scroll up show the top navigation bar -->
+    <script>
+        let lastScrollTop = 0;
+        const navbar = document.querySelector(".navbar");
+    
+        window.addEventListener("scroll", function () {
+            let scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+    
+            if (scrollTop > lastScrollTop) {
+                // Scrolling Down: Hide navbar
+                navbar.style.top = "-70px"; // Adjust based on navbar height
+            } else {
+                // Scrolling Up: Show navbar
+                navbar.style.top = "0";
+            }
+    
+            lastScrollTop = scrollTop;
+        });
+    </script>
+    
+
+    
+    <!-- Bottom Navigation Bar -->
+    <!-- If the page is current selected e.g profile, at the bottom navigation bar the profile and its icon will turn red indicating they are currently at that page -->
+    <nav class="bottom-navbar">
+        <div class="container">
+            <a href="{{ url('/profile') }}" class="{{ request()->is('profile') ? 'active' : '' }}">
+                <i class="fas fa-user"></i> Profile
+            </a>
+            <a href="{{ url('/mycard') }}" class="{{ request()->is('mycard') ? 'active' : '' }}">
+                <i class="fas fa-id-card"></i> MyCard
+            </a>
+            <a href="{{ url('/home') }}" class="{{ request()->is('home') ? 'active' : '' }}">
+                <i class="fas fa-home"></i> Home
+            </a>
+            <a href="{{ url('/benefits') }}" class="{{ request()->is('benefits') ? 'active' : '' }}">
+                <i class="fas fa-gift"></i> Benefits
+            </a>
+            <a href="{{ url('/alumnihub') }}" class="{{ request()->is('alumnihub') ? 'active' : '' }}">
+                <i class="fas fa-users"></i> Alumni Hub
+            </a>
+        </div>
+    </nav>
+    
+    
 </body>
 </html>
