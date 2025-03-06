@@ -7,6 +7,8 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
+
+    <!-- Change the title of the top navigation bar based on which page the user is currently at -->
     <title>
         @if (request()->is('profile')) Profile
         @elseif (request()->is('mycard')) MyCard
@@ -16,12 +18,17 @@
         @else {{ config('app.name', 'Uniten Alumni') }}
         @endif
     </title>
+
+   <!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script> -->
+
     
 
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=Nunito" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script> -->
 
     <!-- Styles -->
     <style>
@@ -92,6 +99,9 @@
             color: red; /* Change icon color */
         }
         
+        .extra-margin { /* for padding between content and bottom navigation menu */
+            margin-bottom: 100px; /* Adjust as needed */
+        }
 
 
     </style>
@@ -103,7 +113,7 @@
     <div id="app">
         <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm sticky-top">
             <div class="container">
-                <a class="navbar-brand" href="{{ url('/') }}">
+                <a class="navbar-brand" href="{{ url('/') }}"> <!-- Change the title of the top navigation bar based on which page the user is currently at -->
                     @if (request()->is('profile')) Profile
                     @elseif (request()->is('mycard')) MyCard
                     @elseif (request()->is('home')) Home
@@ -158,7 +168,8 @@
             </div>
         </nav>
 
-        <main class="py-4">
+        <!-- Place content here -->
+        <main class="py-4 extra-margin"> <!--mb-10 is to add padding between content and bottom navigation menu -->
             @yield('content')
         </main>
     </div>
@@ -206,7 +217,6 @@
             </a>
         </div>
     </nav>
-    
     
 </body>
 </html>
