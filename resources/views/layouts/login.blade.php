@@ -1,3 +1,4 @@
+<!-- This login layout is for login and register page and all blade.php files in view/auth folder, so it doesn't show to bottom navigation menu -->
 <!doctype html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
@@ -174,49 +175,4 @@
         </main>
     </div>
 
-    <!-- This script is to make when user scroll down hide the top navigation bar, when user scroll up show the top navigation bar -->
-    <script>
-        let lastScrollTop = 0;
-        const navbar = document.querySelector(".navbar");
-    
-        window.addEventListener("scroll", function () {
-            let scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-    
-            if (scrollTop > lastScrollTop) {
-                // Scrolling Down: Hide navbar
-                navbar.style.top = "-70px"; // Adjust based on navbar height
-            } else {
-                // Scrolling Up: Show navbar
-                navbar.style.top = "0";
-            }
-    
-            lastScrollTop = scrollTop;
-        });
-    </script>
-    
-
-    
-    <!-- Bottom Navigation Bar -->
-    <!-- If the page is current selected e.g profile, at the bottom navigation bar the profile and its icon will turn red indicating they are currently at that page -->
-    <nav class="bottom-navbar">
-        <div class="container">
-            <a href="{{ url('/profile') }}" class="{{ request()->is('profile') ? 'active' : '' }}">
-                <i class="fas fa-user"></i> Profile
-            </a>
-            <a href="{{ url('/mycard') }}" class="{{ request()->is('mycard') ? 'active' : '' }}">
-                <i class="fas fa-id-card"></i> MyCard
-            </a>
-            <a href="{{ url('/home') }}" class="{{ request()->is('home') ? 'active' : '' }}">
-                <i class="fas fa-home"></i> Home
-            </a>
-            <a href="{{ url('/benefits') }}" class="{{ request()->is('benefits') ? 'active' : '' }}">
-                <i class="fas fa-gift"></i> Benefits
-            </a>
-            <a href="{{ url('/alumnihub') }}" class="{{ request()->is('alumnihub') ? 'active' : '' }}">
-                <i class="fas fa-users"></i> Alumni Hub
-            </a>
-        </div>
-    </nav>
-    
-</body>
-</html>
+   
