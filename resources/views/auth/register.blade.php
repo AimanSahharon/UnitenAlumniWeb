@@ -40,6 +40,22 @@
                         </div>
 
                         <div class="row mb-3">
+                            <label for="ic_passport" class="col-md-4 col-form-label text-md-end">{{ __('IC/Passport') }}</label>
+                        
+                            <div class="col-md-6">
+                                <input id="ic_passport" type="text" class="form-control @error('ic_passport') is-invalid @enderror" name="ic_passport" value="{{ old('ic_passport') }}" required autocomplete="ic_passport">
+                                
+                                @error('ic_passport')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+                            </div>
+                        </div>
+                        
+                        
+
+                        <div class="row mb-3">
                             <label for="password" class="col-md-4 col-form-label text-md-end">{{ __('Password') }}</label>
 
                             <div class="col-md-6">
