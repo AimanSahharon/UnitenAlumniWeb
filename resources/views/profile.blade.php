@@ -15,7 +15,7 @@
 
             <div class="input-group">
                 <label for="ic_passport"><strong>IC or Passport Number:</strong></label>
-                <input type="text" name="ic_passport" value="{{ $user->userData->ic_passport ?? '' }}" disabled>
+                <input type="text" name="ic_passport" value="{{ $user->userData->ic_passport ?? '' }}" readonly>
             </div>
 
             <div class="input-group">
@@ -85,14 +85,15 @@
             </div>
 
             <div class="input-group">
-                <label for="current_employment_status"><strong> Current Employment Status:</strong></label>
+                <label for="current_employment_status"><strong>Current Employment Status:</strong></label>
                 <select name="current_employment_status" required>
                     <option value="" disabled selected>Please select your current employment status</option>
-                    <option value="Employed" {{ ($user->userData->current_employment_status ?? '') == 'Bachelor in Accounting' ? 'selected' : '' }}>Employed</option>
+                    <option value="Employed" {{ ($user->userData->current_employment_status ?? '') == 'Employed' ? 'selected' : '' }}>Employed</option>
                     <option value="Self-Employed (Entrepreneur)" {{ ($user->userData->current_employment_status ?? '') == 'Self-Employed (Entrepreneur)' ? 'selected' : '' }}>Self-Employed (Entrepreneur)</option>
                     <option value="Not Employed" {{ ($user->userData->current_employment_status ?? '') == 'Not Employed' ? 'selected' : '' }}>Not Employed</option>
                 </select>
             </div>
+            
 
             <div class="input-group">
                 <label for="employment_level"><strong>Current Employment Level:</strong></label>
@@ -160,6 +161,7 @@
 <style> 
     /* Profile Wrapper */
 .profile-wrapper {
+    max-width: 90%;
     width: 600px; /* Set max width similar to Twitter */
     margin: 0 auto; /* Center it */
     background: #ffffff;
@@ -257,6 +259,22 @@
     border: 1px solid #ccc;
     border-radius: 5px;
 }
+
+@media screen and (max-width: 200px) {
+    .profile-wrapper {
+        max-width: 100%;
+        margin: 20px;
+        padding: 15px;
+    }
+
+    .input-group label {
+        font-size: 14px;
+    }
+
+    .form-container button {
+        font-size: 14px;
+        padding: 10px;
+    }
 
 </style>
 
