@@ -38,4 +38,18 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
 
 use App\Http\Controllers\UserController;
 
+Route::get('/profile', [UserController::class, 'profile'])->name('profile')->middleware('auth');
+Route::put('/profile/update', [UserController::class, 'updateProfile'])
+    ->name('profile.update')
+    ->middleware('auth');
+
+// Profile Edit Page
+Route::get('/profile/edit', [UserController::class, 'edit'])->name('profile.edit')->middleware('auth');
+
+// Profile Update (PUT method)
 Route::put('/profile/update', [UserController::class, 'updateProfile'])->name('profile.update')->middleware('auth');
+
+// Profile Page
+Route::get('/profile', [UserController::class, 'profile'])->name('profile')->middleware('auth');
+
+

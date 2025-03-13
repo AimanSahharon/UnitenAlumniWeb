@@ -22,8 +22,6 @@ class User extends Authenticatable
         'email',
         'password',
         'ic_passport',
-        'profile_image',
-        'banner_image',
     ];
 
     /**
@@ -47,5 +45,10 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+    //This user data can only have one user data (e.g their name, education level etc...)
+    public function userData()
+    {
+        return $this->hasOne(UserData::class, 'ic_passport', 'ic_passport');
     }
 }
