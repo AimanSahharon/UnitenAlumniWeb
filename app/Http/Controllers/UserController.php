@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
 
+
 class UserController extends Controller
 {
     /*public function updateProfile(Request $request)
@@ -46,6 +47,22 @@ class UserController extends Controller
         $request->validate([
             'full_name' => 'required|string',
             'student_id' => 'required|string',
+            'year_of_graduation' => 'required|digits:4|integer|min:1900|max:' . date('Y'),
+            'email_address' => 'required|string',
+            'mobile_number' => 'required|string',
+            'permanent_address' => 'required|string',
+            'college' => 'required|string',
+            'education_level' => 'required|string',
+            'name_of_programme' => 'required|string',
+            'current_employment_status' => 'required|string',
+            'employment_level' => 'required|string',
+            'employment_sector' => 'required|string',
+            'occupational_field' => 'required|string',
+            'range_of_salary' => 'required|string',
+            'position_designation' => 'required|string',
+            'name_of_organisation' => 'required|string',
+            'location_of_workplace' => 'required|string',
+
         ]);
 
         if (!$user->ic_passport) {
@@ -75,6 +92,21 @@ class UserController extends Controller
             [
                 'full_name' => $request->full_name,
                 'student_id' => $request->student_id,
+                'year_of_graduation' => $request->year_of_graduation,
+                'email_address' => $request->email_address,
+                'mobile_number' => $request->mobile_number,
+                'permanent_address' => $request->permanent_address,
+                'college' => $request->college,
+                'education_level' => $request->education_level,
+                'name_of_programme' => $request->name_of_programme,
+                'current_employment_status' => $request->current_employment_status,
+                'employment_level' => $request->employment_level,
+                'employment_sector' => $request->employment_sector,
+                'occupational_field' => $request->occupational_field,
+                'range_of_salary' => $request->range_of_salary,
+                'position_designation' => $request->position_designation,
+                'name_of_organisation' => $request->name_of_organisation,
+                'location_of_workplace' => $request->location_of_workplace,
                 'updated_at' => now(),
             ]
         );

@@ -15,6 +15,21 @@ class UserData extends Model
         'ic_passport',
         'full_name',
         'student_id',
+        'year_of_graduation',
+        'email_address',
+        'mobile_number',
+        'permanent_address',
+        'college',
+        'education_level',
+        'name_of_programme',
+        'current_employment_status',
+        'employment_level',
+        'employment_sector',
+        'occupational_field',
+        'range_of_salary',
+        'position_designation',
+        'name_of_organisation',
+        'location_of_workplace',
     ];
 
     public function user()

@@ -16,6 +16,21 @@ return new class extends Migration
             $table->string('ic_passport')->unique();
             $table->string('full_name');
             $table->string('student_id');
+            $table->integer('year_of_graduation');
+            $table->string('email_address');
+            $table->string('mobile_number');
+            $table->string('permanent_address');
+            $table->string('college');
+            $table->string('education_level');
+            $table->string('name_of_programme');
+            $table->string('current_employment_status');
+            $table->string('employment_level');
+            $table->string('employment_sector');
+            $table->string('occupational_field');
+            $table->string('range_of_salary');
+            $table->string('position_designation');
+            $table->string('name_of_organisation');
+            $table->string('location_of_workplace');
             $table->timestamps();
         });
     }
