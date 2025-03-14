@@ -52,4 +52,12 @@ Route::put('/profile/update', [UserController::class, 'updateProfile'])->name('p
 // Profile Page
 Route::get('/profile', [UserController::class, 'profile'])->name('profile')->middleware('auth');
 
+//update profile images (profile image and banner image)
+Route::post('/profile/upload/profile-picture', [UserController::class, 'uploadProfilePicture'])->name('profile.upload.picture');
+Route::post('/profile/upload/banner', [UserController::class, 'uploadBannerPicture'])->name('profile.upload.banner');
+
+//upload profile images
+Route::post('/profile/upload-images', [UserController::class, 'uploadImages'])->name('profile.upload.images');
+
+
 

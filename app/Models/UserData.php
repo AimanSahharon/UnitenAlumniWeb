@@ -30,6 +30,8 @@ class UserData extends Model
         'position_designation',
         'name_of_organisation',
         'location_of_workplace',
+        'profile_image',
+        'banner_image',
     ];
 
     public function user()

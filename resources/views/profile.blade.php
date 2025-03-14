@@ -2,6 +2,111 @@
 
 @section('content')  
 <div class="profile-wrapper">
+
+       <!-- Banner Image -->
+    <div class="banner-container">
+        <img src="{{ $user->userData->banner_image ? asset('storage/' . $user->userData->banner_image) : asset('default-banner.jpg') }}" 
+            class="banner" alt="Banner Picture">
+    </div>
+
+    <!-- Profile Image -->
+    <div class="profile-container">
+        <img src="{{ $user->userData->profile_image ? asset('storage/' . $user->userData->profile_image) : asset('default-profile.png') }}" 
+            class="profile" alt="Profile Picture">
+    </div>
+
+    <!-- Upload Buttons Stacked Vertically with Equal Spacing -->
+    <div class="upload-container">
+        <form action="{{ route('profile.upload.images') }}" method="POST" enctype="multipart/form-data">
+            @csrf
+
+            <br>
+            <!-- Upload Profile Image Button -->
+            <label class="upload-btn">
+                <input type="file" name="profile_image" accept="image/*" id="profileInput" onchange="showFileName(this, 'profileFileName')">
+                Upload Profile Image
+            </label>
+            <span id="profileFileName" class="file-name">No file selected</span>
+
+            <br>
+
+            <!-- Upload Banner Image Button -->
+            <label class="upload-btn">
+                <input type="file" name="banner_image" accept="image/*" id="bannerInput" onchange="showFileName(this, 'bannerFileName')">
+                Upload Banner Image
+            </label>
+            <span id="bannerFileName" class="file-name">No file selected</span>
+
+            <br>
+
+            <!-- Upload Images Button -->
+            <button type="submit">Upload Image(s)</button>
+        </form>
+    </div>
+
+    <!-- CSS for Equal Spacing -->
+    <style>
+        .upload-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px; /* Adds consistent spacing between buttons */
+            margin-top: 20px;
+        }
+
+        .upload-btn, button {
+            width: 200px;
+            padding: 12px;
+            text-align: center;
+            border-radius: 5px;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .upload-btn {
+            background-color: #007bff;
+            color: white;
+        }
+
+        .upload-btn input {
+            display: none;
+        }
+
+        .file-name {
+            font-size: 14px;
+            color: #333;
+            margin-top: 5px;
+        }
+
+        button {
+            background-color: #28a745;
+            color: white;
+            border: none;
+        }
+
+        button:hover, .upload-btn:hover {
+            opacity: 0.8;
+        }
+    </style>
+
+    <!-- JavaScript for Displaying Selected File Name -->
+    <script>
+        function showFileName(input, fileNameId) {
+            const fileNameSpan = document.getElementById(fileNameId);
+            if (input.files.length > 0) {
+                fileNameSpan.textContent = input.files[0].name;
+            } else {
+                fileNameSpan.textContent = "No file selected";
+            }
+        }
+    </script>
+
+
+
+
+    
     <div class="form-container">
         <h2>User Profile</h2>
 
@@ -9,7 +114,7 @@
             <p style="color: green;">{{ session('success') }}</p>
         @endif
 
-        <form action="{{ route('profile.update') }}" method="POST">
+        <form action="{{ route('profile.update') }}" method="POST" enctype="multipart/form-data">
             @csrf
             @method('PUT')
 
@@ -227,6 +332,9 @@
     border: none;
     border-radius: 5px;
     cursor: pointer;
+    display: block; /* Ensures block-level behavior */
+    margin: 20px auto; /* Centers horizontally */
+    text-align: center;
 }
 
 .form-container button:hover {
