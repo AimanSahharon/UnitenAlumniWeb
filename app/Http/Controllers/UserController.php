@@ -80,52 +80,83 @@ class UserController extends Controller
         return view('profile', compact('user', 'userData'));
     }
 
-    public function uploadProfilePicture(Request $request)
-{
-    $request->validate([
-        'profile_image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
-    ]);
+        public function uploadProfilePicture(Request $request)
+    {
+        $request->validate([
+            'profile_image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+        ]);
 
-    $user = Auth::user();
-    $path = $request->file('profile_image')->store('profile_images', 'public');
+        $user = Auth::user();
+        $path = $request->file('profile_image')->store('profile_images', 'public');
 
-    $user->userData->update(['profile_image' => $path]);
-    
+        $user->userData->update(['profile_image' => $path]);
+        
 
-    return back()->with('success', 'Profile picture updated successfully!');
-}
-
-public function uploadBannerPicture(Request $request)
-{
-    $request->validate([
-        'banner_image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
-    ]);
-
-    $user = Auth::user();
-    $path = $request->file('banner_image')->store('banner_images', 'public');
-
-    $user->userData->update(['banner_image' => $path]);
-
-    return back()->with('success', 'Banner picture updated successfully!');
-}
-
-public function uploadImages(Request $request)
-{
-    $user = Auth::user();
-    
-    if ($request->hasFile('profile_image')) {
-        $profilePath = $request->file('profile_image')->store('profiles', 'public');
-        $user->userData->profile_image = $profilePath;
+        return back()->with('success', 'Profile picture updated successfully!');
     }
 
-    if ($request->hasFile('banner_image')) {
-        $bannerPath = $request->file('banner_image')->store('banners', 'public');
-        $user->userData->banner_image = $bannerPath;
+    public function uploadBannerPicture(Request $request)
+    {
+        $request->validate([
+            'banner_image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+        ]);
+
+        $user = Auth::user();
+        $path = $request->file('banner_image')->store('banner_images', 'public');
+
+        $user->userData->update(['banner_image' => $path]);
+
+        return back()->with('success', 'Banner picture updated successfully!');
     }
 
-    $user->userData->save();
-    return back()->with('success', 'Image(s) updated successfully!');
+    public function uploadImages(Request $request)
+    {
+        $user = Auth::user();
+        
+        if ($request->hasFile('profile_image')) {
+            $profilePath = $request->file('profile_image')->store('profiles', 'public');
+            $user->userData->profile_image = $profilePath;
+        }
+
+        if ($request->hasFile('banner_image')) {
+            $bannerPath = $request->file('banner_image')->store('banners', 'public');
+            $user->userData->banner_image = $bannerPath;
+        }
+
+        $user->userData->save();
+        return back()->with('success', 'Image(s) updated successfully!');
+    }
+
+    public function search(Request $request)
+{
+    $query = UserData::query(); // Assuming UserData is your model
+
+    if ($request->filled('search_name')) {
+        $query->where('full_name', 'like', '%' . $request->search_name . '%');
+    }
+
+    if ($request->filled('year_of_graduation')) {
+        $query->where('year_of_graduation', $request->year_of_graduation);
+    }
+
+    if ($request->filled('college')) {
+        $query->where('college', $request->college);
+    }
+
+    if ($request->filled('education_level')) {
+        $query->where('education_level', $request->education_level);
+    }
+
+    if ($request->filled('name_of_programme')) {
+        $query->where('name_of_programme', 'like', '%' . $request->name_of_programme . '%');
+    }
+
+    $alumni = $query->paginate(10);
+
+    return view('alumnihub.connectalumni', ['alumni' => $alumni]);
 }
+
+
 
 
 

@@ -59,5 +59,40 @@ Route::post('/profile/upload/banner', [UserController::class, 'uploadBannerPictu
 //upload profile images
 Route::post('/profile/upload-images', [UserController::class, 'uploadImages'])->name('profile.upload.images');
 
+Route::get('/info', function () {
+    return view('info');
+})->name('info');
+
+
+
+//Routes for Alumni Hub
+
+//Route for Connect Alumni
+/*Route::get('/connectalumni', function () {
+    return view('alumnihub.connectalumni'); // Correct folder reference
+})->name('connectalumni'); */
+
+Route::get('/connectalumni', [UserController::class, 'search'])->name('connectalumni');
+//Route::get('/connectalumni', [UserController::class, 'search'])->name('connectalumni.search');
+
+
+
+
+
+
+
+
+Route::get('/posts', function () {
+    return view('alumnihub.posts');
+})->name('posts');
+
+Route::get('/interestgroup', function () {
+    return view('alumnihub.interestgroup');
+})->name('interestgroup');
+
+Route::get('/businesslistings', function () {
+    return view('alumnihub.businesslistings');
+})->name('businesslistings');
+
 
 
