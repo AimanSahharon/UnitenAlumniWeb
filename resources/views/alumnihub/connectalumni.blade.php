@@ -85,7 +85,11 @@
                 @if(isset($alumni) && $alumni->count())
                     @foreach($alumni as $alumnus)
                         <tr>
-                            <td>{{ $alumnus->full_name }}</td>
+                            <td>
+                                <a href="{{ route('alumni.show', $alumnus->id) }}">
+                                    {{ $alumnus->full_name }}
+                                </a>
+                            </td>
                             <td>{{ $alumnus->year_of_graduation }}</td>
                             <td>{{ $alumnus->college }}</td>
                             <td>{{ $alumnus->education_level }}</td>

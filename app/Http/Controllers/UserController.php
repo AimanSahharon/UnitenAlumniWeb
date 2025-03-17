@@ -128,34 +128,59 @@ class UserController extends Controller
     }
 
     public function search(Request $request)
-{
-    $query = UserData::query(); // Assuming UserData is your model
+    {
+        $query = UserData::query(); // Assuming UserData is your model
 
-    if ($request->filled('search_name')) {
-        $query->where('full_name', 'like', '%' . $request->search_name . '%');
+        if ($request->filled('search_name')) {
+            $query->where('full_name', 'like', '%' . $request->search_name . '%');
+        }
+
+        if ($request->filled('year_of_graduation')) {
+            $query->where('year_of_graduation', $request->year_of_graduation);
+        }
+
+        if ($request->filled('college')) {
+            $query->where('college', $request->college);
+        }
+
+        if ($request->filled('education_level')) {
+            $query->where('education_level', $request->education_level);
+        }
+
+        if ($request->filled('name_of_programme')) {
+            $query->where('name_of_programme', 'like', '%' . $request->name_of_programme . '%');
+        }
+
+        $alumni = $query->paginate(10);
+
+        return view('alumnihub.connectalumni', ['alumni' => $alumni]);
     }
 
-    if ($request->filled('year_of_graduation')) {
-        $query->where('year_of_graduation', $request->year_of_graduation);
+    public function show($id)
+    {
+        $alumnus = UserData::findOrFail($id); // Fetch alumni details
+        return view('alumnihub.profile', compact('alumnus'));
     }
 
-    if ($request->filled('college')) {
-        $query->where('college', $request->college);
+
+
+
+
+    public function myPosts()
+    {
+        $posts = Auth::user()->posts; // Assuming a relationship exists
+        return view('profile.myposts', compact('posts'));
     }
 
-    if ($request->filled('education_level')) {
-        $query->where('education_level', $request->education_level);
+    public function myInterestGroup()
+    {
+        return view('profile.myinterestgroup'); // Ensure file exists in resources/views/profile/
     }
 
-    if ($request->filled('name_of_programme')) {
-        $query->where('name_of_programme', 'like', '%' . $request->name_of_programme . '%');
+    public function myBusinessListings()
+    {
+        return view('profile.mybusinesslistings'); // Ensure file exists in resources/views/profile/
     }
-
-    $alumni = $query->paginate(10);
-
-    return view('alumnihub.connectalumni', ['alumni' => $alumni]);
-}
-
 
 
 

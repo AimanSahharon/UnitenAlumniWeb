@@ -11,9 +11,9 @@ Route::get('/home', function() {
     return view('home');
 });
 
-Route::get('/profile', function() {
+/*Route::get('/profile', function() {
     return view('profile');
-});
+}); */
 
 Route::get('/mycard', function() {
     return view('mycard');
@@ -63,9 +63,24 @@ Route::get('/info', function () {
     return view('info');
 })->name('info');
 
+//Routes for Tabs in Profile Page
+Route::get('/myposts', function () {
+    return view('profile.myposts', ['user' => Auth::user()]);
+})->name('myposts')->middleware('auth');
+
+Route::get('/myinterestgroup', function () {
+    return view('profile.myinterestgroup', ['user' => Auth::user()]);
+})->name('myinterestgroup')->middleware('auth');
+
+Route::get('/mybusinesslistings', function () {
+    return view('profile.mybusinesslistings', ['user' => Auth::user()]);
+})->name('mybusinesslistings')->middleware('auth');
 
 
-//Routes for Alumni Hub
+
+
+
+//Routes for Alumni Hub Tabs
 
 //Route for Connect Alumni
 /*Route::get('/connectalumni', function () {
@@ -75,7 +90,7 @@ Route::get('/info', function () {
 Route::get('/connectalumni', [UserController::class, 'search'])->name('connectalumni');
 //Route::get('/connectalumni', [UserController::class, 'search'])->name('connectalumni.search');
 
-
+Route::get('/alumni/{id}', [UserController::class, 'show'])->name('alumni.show');
 
 
 
@@ -93,6 +108,7 @@ Route::get('/interestgroup', function () {
 Route::get('/businesslistings', function () {
     return view('alumnihub.businesslistings');
 })->name('businesslistings');
+
 
 
 

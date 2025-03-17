@@ -1,223 +1,258 @@
-<!-- This layout is for profile page -->
-<!doctype html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+@extends('layouts.app')
 
-    <!-- CSRF Token -->
-    <meta name="csrf-token" content="{{ csrf_token() }}">
+@section('content')  
+<div class="profile-wrapper">
+        <!-- Banner Image -->
+     <div class="banner-container">
+         <img src="{{ $user->userData->banner_image ? asset('storage/' . $user->userData->banner_image) : asset('default-banner.jpg') }}" 
+             class="banner" alt="Banner Picture">
+     </div>
+ 
+     <!-- Profile Image -->
+     <div class="profile-container">
+         <img src="{{ $user->userData->profile_image ? asset('storage/' . $user->userData->profile_image) : asset('default-profile.png') }}" 
+             class="profile" alt="Profile Picture">
+     </div>
+ 
+     <br><br> <!-- Create spacing between user's name and their profile image -->
+     <h2 class="text-center">{{ Auth::user()->name }}</h2>
+ 
+     <!-- Upload Buttons Stacked Vertically with Equal Spacing -->
+     <div class="upload-container">
+         <form action="{{ route('profile.upload.images') }}" method="POST" enctype="multipart/form-data">
+             @csrf
+ 
+             <br>
+             <!-- Upload Profile Image Button -->
+             <label class="upload-btn">
+                 <input type="file" name="profile_image" accept="image/*" id="profileInput" onchange="showFileName(this, 'profileFileName')">
+                 Upload Profile Image
+             </label>
+             <span id="profileFileName" class="file-name">No file selected</span>
+ 
+             <br>
+ 
+             <!-- Upload Banner Image Button -->
+             <label class="upload-btn">
+                 <input type="file" name="banner_image" accept="image/*" id="bannerInput" onchange="showFileName(this, 'bannerFileName')">
+                 Upload Banner Image
+             </label>
+             <span id="bannerFileName" class="file-name">No file selected</span>
+ 
+             <br>
+ 
+             <!-- Upload Images Button -->
+             <button type="submit">Upload Image(s)</button>
+         </form>
+     </div>
+ 
+     <!-- CSS for Equal Spacing -->
+     <style>
+         .upload-container {
+             display: flex;
+             flex-direction: column;
+             align-items: center;
+             gap: 15px; /* Adds consistent spacing between buttons */
+             margin-top: 20px;
+         }
+ 
+         .upload-btn, button {
+             width: 200px;
+             padding: 12px;
+             text-align: center;
+             border-radius: 5px;
+             cursor: pointer;
+             display: flex;
+             justify-content: center;
+             align-items: center;
+         }
+ 
+         .upload-btn {
+             background-color: #007bff;
+             color: white;
+         }
+ 
+         .upload-btn input {
+             display: none;
+         }
+ 
+         .file-name {
+             font-size: 14px;
+             color: #333;
+             margin-top: 5px;
+         }
+ 
+         button {
+             background-color: #28a745;
+             color: white;
+             border: none;
+         }
+ 
+         button:hover, .upload-btn:hover {
+             opacity: 0.8;
+         }
+     </style>
+ 
+     <!-- JavaScript for Displaying Selected File Name -->
+     <script>
+         function showFileName(input, fileNameId) {
+             const fileNameSpan = document.getElementById(fileNameId);
+             if (input.files.length > 0) {
+                 fileNameSpan.textContent = input.files[0].name;
+             } else {
+                 fileNameSpan.textContent = "No file selected";
+             }
+         }
+     </script>
+ 
 
-
-    <!-- Change the title of the top navigation bar based on which page the user is currently at -->
-    <title>
-        @if (request()->is('profile')) Profile
-        @elseif (request()->is('mycard')) MyCard
-        @elseif (request()->is('home')) Home
-        @elseif (request()->is('benefits')) Benefits
-        @elseif (request()->is('alumnihub')) Alumni Hub
-        @else {{ config('app.name', 'Uniten Alumni') }}
-        @endif
-    </title>
-
-
-
-    
-
-    <!-- Fonts -->
-    <link rel="dns-prefetch" href="//fonts.bunny.net">
-    <link href="https://fonts.bunny.net/css?family=Nunito" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-
-
-    <!-- Styles -->
-    <style>
-        body {
-            background: linear-gradient(to bottom, #FF0000 , #8000FF);
-            min-height: 100vh;
-            margin: 0;
-            display: flex;
-            flex-direction: column;
-        }
-        #app {
-            flex: 1;
-        }
-        .navbar {
-            position: fixed;
-            top: 0;
-            width: 100%;
-            z-index: 1000;
-            background-color: white;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-            transition: top 0.3s ease-in-out; /* Smooth transition effect */
-        }
-        .bottom-navbar {
-            position: fixed;
-            bottom: 0;
-            width: 100%;
-            background-color: white;
-            box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
-            padding: 10px 0;
-            overflow-x: auto; /* Enables horizontal scrolling */
-            white-space: nowrap; /* Prevents items from wrapping */
-            display: flex;
-            justify-content: flex-start;
-            padding: 10px;
-            scrollbar-width: thin; /* Hide scrollbar on Firefox */
-        }
-        .bottom-navbar::-webkit-scrollbar {
-            display: none; /* Ensure scrollbar is visible */
-            height: 5px; /* Set a small scrollbar height */
-        }
-
-
-        .bottom-navbar .container {
-            display: flex;
-            justify-content: center;
-            flex-wrap: nowrap; /* Prevent wrapping */
-            width: max-content; /* Ensure container fits all items */
-            gap: 20px;
-            
-        }
-        .bottom-navbar a {
-            display: flex;
-            align-items: center;
-            gap: 8px; /* Space between icon and text */
-            text-decoration: none;
-            color: black;
-            font-weight: bold;
-            padding: 10px;
-        }
-        .bottom-navbar i {
-            font-size: 18px; /* Adjust icon size */
-        }
-        .bottom-navbar a.active {
-        color: red; /* Change text color */
-        }
-
-        .bottom-navbar a.active i {
-            color: red; /* Change icon color */
-        }
+    <!-- Tabs Navigation -->
+    <ul class="nav nav-tabs mt-4 d-flex justify-content-center" id="ProfileTabs" role="tablist">
+        <li class="nav-item">
+            <a class="nav-link {{ request()->is('profile') ? 'active' : '' }}" 
+                href="{{ route('profile', $user->id) }}">
+                 Info
+             </a>
+        </li>
         
-        .extra-margin { /* for padding between content and bottom navigation menu */
-            margin-bottom: 100px; /* Adjust as needed */
-        }
-
-
-    </style>
-
-    <!-- Scripts -->
-    @vite(['resources/sass/app.scss', 'resources/js/app.js'])
-</head>
-<body>
-    <div id="app">
-        <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm sticky-top">
-            <div class="container">
-                <a class="navbar-brand" href="{{ url('/') }}"> <!-- Change the title of the top navigation bar based on which page the user is currently at -->
-                    @if (request()->is('profile')) Profile
-                    @elseif (request()->is('mycard')) MyCard
-                    @elseif (request()->is('home')) Home
-                    @elseif (request()->is('benefits')) Benefits
-                    @elseif (request()->is('alumnihub')) Alumni Hub
-                    @else {{ config('app.name', 'Uniten Alumni') }}
-                    @endif
-                </a>
-                
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-
-                <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                    <!-- Left Side Of Navbar -->
-                    <ul class="navbar-nav me-auto"></ul>
-
-                    <!-- Right Side Of Navbar -->
-                    <ul class="navbar-nav ms-auto">
-                        @guest
-                            @if (Route::has('login'))
-                                <li class="nav-item">
-                                    <a class="nav-link" href="{{ route('login') }}">{{ __('Login') }}</a>
-                                </li>
-                            @endif
-                            @if (Route::has('register'))
-                                <li class="nav-item">
-                                    <a class="nav-link" href="{{ route('register') }}">{{ __('Register') }}</a>
-                                </li>
-                            @endif
-                        @else
-                            <li class="nav-item dropdown">
-                                <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                                    {{ Auth::user()->name }}
-                                </a>
-
-                                <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                                    <a class="dropdown-item" href="{{ route('logout') }}"
-                                       onclick="event.preventDefault();
-                                                     document.getElementById('logout-form').submit();">
-                                        {{ __('Logout') }}
-                                    </a>
-
-                                    <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
-                                        @csrf
-                                    </form>
-                                </div>
-                            </li>
-                        @endguest
-                    </ul>
-                </div>
-            </div>
-        </nav>
-
-        <!-- Place content here -->
-        <main class="py-4 extra-margin"> <!--mb-10 is to add padding between content and bottom navigation menu -->
-            @yield('content')
-        </main>
+        <li class="nav-item">
+            <a class="nav-link {{ request()->is('myposts') ? 'active' : '' }}" href="{{ route('myposts') }}">Posts</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link {{ request()->is('myinterestgroup') ? 'active' : '' }}" href="{{ route('myinterestgroup') }}">Interest Group</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link {{ request()->is('mybusinesslistings') ? 'active' : '' }}" href="{{ route('mybusinesslistings') }}">Business Listing</a>
+        </li>
+    </ul>
+    
+    <!-- Dynamic Content Section -->
+    <div class="tab-content mt-3">
+        @yield('tab-content')
     </div>
+</div>
 
-    <!-- This script is to make when user scroll down hide the top navigation bar, when user scroll up show the top navigation bar -->
-    <script>
-        let lastScrollTop = 0;
-        const navbar = document.querySelector(".navbar");
-    
-        window.addEventListener("scroll", function () {
-            let scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-    
-            if (scrollTop > lastScrollTop) {
-                // Scrolling Down: Hide navbar
-                navbar.style.top = "-70px"; // Adjust based on navbar height
-            } else {
-                // Scrolling Up: Show navbar
-                navbar.style.top = "0";
-            }
-    
-            lastScrollTop = scrollTop;
-        });
-    </script>
-    
+<style> 
+    /* Profile Wrapper */
+.profile-wrapper {
+    max-width: 90%;
+    width: 600px; /* Set max width similar to Twitter */
+    margin: 0 auto; /* Center it */
+    background: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    justify-content: center;
+    align-items: center;
+}
 
-    
-    <!-- Bottom Navigation Bar -->
-    <!-- If the page is current selected e.g profile, at the bottom navigation bar the profile and its icon will turn red indicating they are currently at that page -->
-    <nav class="bottom-navbar">
-        <div class="container">
-            <a href="{{ url('/profile') }}" class="{{ request()->is('profile') ? 'active' : '' }}">
-                <i class="fas fa-user"></i> Profile
-            </a>
-            <a href="{{ url('/mycard') }}" class="{{ request()->is('mycard') ? 'active' : '' }}">
-                <i class="fas fa-id-card"></i> MyCard
-            </a>
-            <a href="{{ url('/home') }}" class="{{ request()->is('home') ? 'active' : '' }}">
-                <i class="fas fa-home"></i> Home
-            </a>
-            <a href="{{ url('/benefits') }}" class="{{ request()->is('benefits') ? 'active' : '' }}">
-                <i class="fas fa-gift"></i> Benefits
-            </a>
-            <a href="{{ url('/alumnihub') }}" class="{{ request()->is('alumnihub') ? 'active' : '' }}">
-                <i class="fas fa-users"></i> Alumni Hub
-            </a>
-        </div>
-    </nav>
-    
-</body>
-</html>
+/* Banner Image */
+.banner-container {
+    width: 100%;
+    height: 200px; /* Set banner height */
+    position: relative;
+    overflow: hidden;
+    background: #f5f5f5; /* Light grey background in case no banner */
+}
+
+.banner {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Ensures the image covers the div */
+}
+
+/* Profile Image */
+.profile-container {
+    position: absolute;
+    top: 200px; /* Adjusts overlap with the banner */
+    left: 40%;
+    transform: translateX(-50%);
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    overflow: hidden;
+    background: white;
+    border: 4px solid white;
+}
+
+.profile {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+/* Form Styling */
+.form-container {
+    margin-top: 70px;
+    padding: 20px;
+    text-align: center;
+}
+
+.form-container input {
+    display: block;
+    margin: 10px auto;
+} 
+
+.form-container button {
+    background: #1da1f2; /* Twitter blue */
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    display: block; /* Ensures block-level behavior */
+    margin: 20px auto; /* Centers horizontally */
+    text-align: center;
+}
+
+.form-container button:hover {
+    background: #0d8ae5;
+}
+
+.input-group {
+    display: flex;
+    align-items: center; /* Aligns text and input in the same line */
+    gap: 10px; /* Adds spacing between the label and input */
+    justify-content: center; /* Centers horizontally */
+    width: 100%; /* Ensures it takes up full width */
+    display: flex;
+    flex-direction: column; /* Stack label and input */
+    align-items: flex-start; /* Align labels and inputs on the left */
+    width: 100%;
+    margin-bottom: 15px; /* Space between fields */
+}
+
+.input-group label {
+    font-weight: bold;
+    margin-bottom: 5px; /* Space between label and input */
+}
+
+.input-group input, 
+.input-group select, 
+.input-group textarea {
+    width: 100%; /* Make all inputs take full width */
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+@media screen and (max-width: 200px) {
+    .profile-wrapper {
+        max-width: 100%;
+        margin: 20px;
+        padding: 15px;
+    }
+
+    .input-group label {
+        font-size: 14px;
+    }
+
+    .form-container button {
+        font-size: 14px;
+        padding: 10px;
+    }
+}
+
+</style>
+@endsection
