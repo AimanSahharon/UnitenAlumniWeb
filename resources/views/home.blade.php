@@ -1,31 +1,8 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <!-- First Card -->
-            <div class="card">
-                <div class="card-header">{{ __('Dashboard') }}</div>
 
-                <div class="card-body">
-                    @if (session('status'))
-                        <div class="alert alert-success" role="alert">
-                            {{ session('status') }}
-                        </div>
-                    @endif
-
-                    {{ __('You are logged in!') }}
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- White Line -->
-<div class="white-line"></div>
-
-<!-- Second Card -->
+<!-- First Card: Uniten Career Portal-->
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-8"> <!-- Adjust width here -->
@@ -46,7 +23,7 @@
 <!-- White Line -->
 <div class="white-line"></div>
 
-<!-- Third Card -->
+<!-- Second Card: Donations -->
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-8"> <!-- Adjust width here -->
@@ -64,7 +41,7 @@
                             <div class="small mt-2">YCU</div>
                         </div>
                         <div>
-                            <a href="https://example2.com" target="_blank">
+                            <a href="https://www.amanahuniten.my/" target="_blank">
                                 <img src="{{ asset('images/tazu.jpg') }}" class="img-thumbnail uniform-img" alt="Small Image 2">
                             </a>
                             <div class="small mt-2">TAZU</div>
@@ -129,7 +106,7 @@
 <div class="white-line"></div>
 
 
-<!-- Fourth Card -->
+<!-- Third Card: IRC-->
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-8"> <!-- Adjust width here -->
@@ -137,7 +114,7 @@
                 <div class="card-header text-center">{{ __('IRC') }}</div>
                 
                 <div class="card-body text-center">
-                    <a href="http://careers.uniten.edu.my/unicap/#" target="_blank">
+                    <a href="https://lib.uniten.edu.my/ulib/" target="_blank">
                         <img src="{{ asset('images/irc.png') }}" class="img-fluid" alt="Image Description">
                     </a>
                     <div class="small mt-2">IRC</div>
@@ -150,7 +127,7 @@
 <!-- White Line -->
 <div class="white-line"></div>
 
-<!-- Fifth Card -->
+<!-- Fourth Card: Advertisements -->
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-8"> <!-- Adjust width here -->
@@ -199,7 +176,7 @@
 <!-- White Line -->
 <div class="white-line"></div>
 
-<!-- Sixth Card -->
+<!-- Fifth Card: Social Media -->
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-8"> <!-- Adjust width here -->
@@ -232,7 +209,7 @@
 <!-- White Line -->
 <div class="white-line"></div>
 
-<!-- Seventh Card -->
+<!-- Sixth Card: Contact Info -->
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-8"> <!-- Adjust width here -->

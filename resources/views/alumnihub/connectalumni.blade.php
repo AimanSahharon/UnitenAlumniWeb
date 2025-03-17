@@ -69,34 +69,37 @@
     </form>
 
     <h3 class="mt-4">Search Results:</h3>
-    <table class="table table-bordered">
-        <thead>
-            <tr>
-                <th>Name</th>
-                <th>Graduation Year</th>
-                <th>College</th>
-                <th>Education Level</th>
-                <th>Programme</th>
-            </tr>
-        </thead>
-        <tbody>
-            @if(isset($alumni) && $alumni->count())
-                @foreach($alumni as $alumnus)
-                    <tr>
-                        <td>{{ $alumnus->full_name }}</td>
-                        <td>{{ $alumnus->year_of_graduation }}</td>
-                        <td>{{ $alumnus->college }}</td>
-                        <td>{{ $alumnus->education_level }}</td>
-                        <td>{{ $alumnus->name_of_programme }}</td>
-                    </tr>
-                @endforeach
-            @else
+    <!-- Scrollable Table Wrapper -->
+    <div class="table-responsive">
+        <table class="table table-bordered">
+            <thead>
                 <tr>
-                    <td colspan="5" class="text-center">No alumni found.</td>
+                    <th>Name</th>
+                    <th>Graduation Year</th>
+                    <th>College</th>
+                    <th>Education Level</th>
+                    <th>Programme</th>
                 </tr>
-            @endif
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                @if(isset($alumni) && $alumni->count())
+                    @foreach($alumni as $alumnus)
+                        <tr>
+                            <td>{{ $alumnus->full_name }}</td>
+                            <td>{{ $alumnus->year_of_graduation }}</td>
+                            <td>{{ $alumnus->college }}</td>
+                            <td>{{ $alumnus->education_level }}</td>
+                            <td>{{ $alumnus->name_of_programme }}</td>
+                        </tr>
+                    @endforeach
+                @else
+                    <tr>
+                        <td colspan="5" class="text-center">No alumni found.</td>
+                    </tr>
+                @endif
+            </tbody>
+        </table>
+    </div>
 
     @if(isset($alumni) && $alumni->count())
     {{ $alumni->links() }}
