@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\PostController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -85,9 +86,20 @@ Route::get('/alumni/{id}', [UserController::class, 'show'])->name('alumni.show')
 
 
 
-Route::get('/posts', function () {
+Route::get('/posts.view', function () {
     return view('alumnihub.posts');
-})->name('posts');
+})->name('posts.view');
+
+//Post Routes
+Route::get('/posts', [PostController::class, 'index']);
+Route::post('/posts', [PostController::class, 'store']);
+Route::post('/posts/{id}/like', [PostController::class, 'like']);
+Route::post('/posts/{id}/comment', [PostController::class, 'comment']);
+Route::delete('/comments/{id}', [PostController::class, 'deleteComment']);
+Route::delete('/posts/{id}', [PostController::class, 'deletePost']);
+
+
+
 
 Route::get('/interestgroup', function () {
     return view('alumnihub.interestgroup');

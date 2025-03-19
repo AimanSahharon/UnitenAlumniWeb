@@ -2,6 +2,7 @@
 @extends('layouts.app')
 
 @section('content')  
+<script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
 <div class="profile-wrapper">
     <!-- Tabs Navigation -->
     <ul class="nav nav-tabs mt-4 d-flex justify-content-center" id="ConnectAlumniTabs" role="tablist">
@@ -9,7 +10,7 @@
             <a class="nav-link {{ request()->is('connectalumni') ? 'active' : '' }}" href="{{ route('connectalumni') }}">Connect Alumni</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link {{ request()->is('posts') ? 'active' : '' }}" href="{{ route('posts') }}">Posts</a>
+            <a class="nav-link {{ request()->is('posts.view') ? 'active' : '' }}" href="{{ route('posts.view') }}">Posts</a>
         </li>
         <li class="nav-item">
             <a class="nav-link {{ request()->is('interestgroup') ? 'active' : '' }}" href="{{ route('interestgroup') }}">Interest Group</a>
