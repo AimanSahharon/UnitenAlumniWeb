@@ -11,10 +11,6 @@ Route::get('/home', function() {
     return view('home');
 });
 
-/*Route::get('/profile', function() {
-    return view('profile');
-}); */
-
 Route::get('/mycard', function() {
     return view('mycard');
 });
@@ -81,16 +77,8 @@ Route::get('/mybusinesslistings', function () {
 
 
 //Routes for Alumni Hub Tabs
-
-//Route for Connect Alumni
-/*Route::get('/connectalumni', function () {
-    return view('alumnihub.connectalumni'); // Correct folder reference
-})->name('connectalumni'); */
-
 Route::get('/connectalumni', [UserController::class, 'search'])->name('connectalumni');
-//Route::get('/connectalumni', [UserController::class, 'search'])->name('connectalumni.search');
-
-Route::get('/alumni/{id}', [UserController::class, 'show'])->name('alumni.show');
+Route::get('/alumni/{id}', [UserController::class, 'show'])->name('alumni.show'); //view other alumni's profile
 
 
 

@@ -182,7 +182,14 @@ class UserController extends Controller
         return view('profile.mybusinesslistings'); // Ensure file exists in resources/views/profile/
     }
 
+    public function posts($id) {
+        $alumnus = UserData::findOrFail($id);
+        $user = Auth::user(); // Get the currently authenticated user
+        $posts = $alumnus->posts; // Assuming a relationship exists
 
+        return view('alumni.posts', compact('alumnus', 'posts', 'user'));
+    }
+    
 
 
     

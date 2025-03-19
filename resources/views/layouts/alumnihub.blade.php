@@ -1,3 +1,4 @@
+<!-- This layout is for Alumni Hub Page -->
 @extends('layouts.app')
 
 @section('content')  
