@@ -21,7 +21,25 @@
                 <p class="text-lg"><strong x-text="post.user ? post.user.name : 'Unknown User'"></strong></p>
 
                 <p x-text="post.content"></p>
-                <img x-bind:src="post.image ? post.image : ''" x-show="post.image" class="mt-2 w-40 h-40 object-cover">
+                <img 
+                x-bind:src="post.image ? post.image : ''" 
+                x-show="post.image" 
+                class="mt-2 object-cover"
+                x-ref="postImage"
+                x-init="
+                    $nextTick(() => {
+                        let img = $refs.postImage;
+                        img.onload = () => {
+                            if (img.naturalHeight > img.naturalWidth) {
+                                img.style.height = '500px';
+                                img.style.width = '300px';
+                            } else {
+                                img.style.height = '300px';
+                                img.style.width = '500px';
+                            }
+                        };
+                    })
+                ">
                 <p class="text-sm text-gray-500" x-text="new Date(post.created_at).toLocaleString()"></p>
 
                 <!-- Delete Button (Only show if user owns the post) -->
@@ -81,28 +99,38 @@
                 },
 
                 addPost() {
-                    let formData = new FormData();
-                    formData.append('content', this.newPost.content);
+                let formData = new FormData();
 
-                    if (this.newPost.imageFile) {
-                        formData.append('image', this.newPost.imageFile); // Send file instead of URL
-                    }
+                // Always send content, even if it's empty
+                formData.append('content', this.newPost.content.trim() || '');
 
-                    fetch('/posts', {
-                        method: 'POST',
-                        headers: {
-                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-                        },
-                        body: formData
-                    })
-                    .then(res => res.json())
-                    .then(data => {
-                        this.posts.unshift(data); // Add new post at the top
-                        this.newPost.content = '';
-                        this.newPost.imageFile = null;
-                    })
-                    .catch(error => console.error('Error posting:', error));
-                },
+                // Append image if available
+                if (this.newPost.imageFile) {
+                    formData.append('image', this.newPost.imageFile);
+                }
+
+                // Prevent completely empty posts
+                if (!this.newPost.content.trim() && !this.newPost.imageFile) {
+                    alert("Please enter text or select an image.");
+                    return;
+                }
+
+                fetch('/posts', {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                    },
+                    body: formData
+                })
+                .then(res => res.json())
+                .then(data => {
+                    this.posts.unshift(data); // Add new post at the top
+                    this.newPost.content = '';
+                    this.newPost.imageFile = null;
+                })
+                .catch(error => console.error('Error posting:', error));
+            },
+
 
                 deletePost(id) {
                     if (!confirm("Are you sure you want to delete this post?")) return;

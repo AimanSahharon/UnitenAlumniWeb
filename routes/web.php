@@ -92,7 +92,7 @@ Route::get('/posts.view', function () {
 
 //Post Routes
 Route::get('/posts', [PostController::class, 'index']);
-Route::post('/posts', [PostController::class, 'store']);
+Route::post('/posts', [PostController::class, 'store'])->name('posts.store');
 Route::post('/posts/{id}/like', [PostController::class, 'like']);
 Route::post('/posts/{id}/comment', [PostController::class, 'comment']);
 Route::delete('/comments/{id}', [PostController::class, 'deleteComment']);

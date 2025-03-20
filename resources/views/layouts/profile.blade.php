@@ -165,7 +165,7 @@
 /* Profile Image */
 .profile-container {
     position: absolute;
-    top: 200px; /* Adjusts overlap with the banner */
+    top: 230px; /* Adjusts overlap with the banner */
     left: 40%;
     transform: translateX(-50%);
     width: 120px;

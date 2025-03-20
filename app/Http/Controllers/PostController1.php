@@ -84,13 +84,9 @@ class PostController extends Controller
         }
     
         $request->validate([
-            'content' => 'nullable|string',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048'
+            'content' => 'required|string',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
         ]);
-
-        if (!$request->has('content') && !$request->hasFile('image')) {
-            return response()->json(['error' => 'Post must have content or an image'], 422);
-        }
     
         $imagePath = null;
         if ($request->hasFile('image')) {
