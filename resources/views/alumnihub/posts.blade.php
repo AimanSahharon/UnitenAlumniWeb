@@ -21,25 +21,22 @@
                 <p class="text-lg"><strong x-text="post.user ? post.user.name : 'Unknown User'"></strong></p>
 
                 <p x-text="post.content"></p>
+                <!-- Display the image based on whether it is landscape or portrait ot preserve its aspect ratio. @ load is to fix the issue with when user refresh the images resize on its own -->
                 <img 
                 x-bind:src="post.image ? post.image : ''" 
                 x-show="post.image" 
                 class="mt-2 object-cover"
                 x-ref="postImage"
-                x-init="
-                    $nextTick(() => {
-                        let img = $refs.postImage;
-                        img.onload = () => {
-                            if (img.naturalHeight > img.naturalWidth) {
-                                img.style.height = '500px';
-                                img.style.width = '300px';
-                            } else {
-                                img.style.height = '300px';
-                                img.style.width = '500px';
-                            }
-                        };
-                    })
-                ">
+                @load="
+                let img = $el;
+                if (img.naturalHeight > img.naturalWidth) {
+                    img.style.height = '500px';
+                    img.style.width = '300px';
+                } else {
+                    img.style.height = '300px';
+                    img.style.width = '500px';
+                }">
+
                 <p class="text-sm text-gray-500" x-text="new Date(post.created_at).toLocaleString()"></p>
 
                 <!-- Delete Button (Only show if user owns the post) -->
@@ -102,7 +99,11 @@
                 let formData = new FormData();
 
                 // Always send content, even if it's empty
-                formData.append('content', this.newPost.content.trim() || '');
+                //formData.append('content', this.newPost.content.trim() || '');
+                if (this.newPost.content.trim()) {
+                formData.append('content', this.newPost.content.trim());
+                }
+
 
                 // Append image if available
                 if (this.newPost.imageFile) {
