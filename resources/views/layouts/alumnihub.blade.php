@@ -46,5 +46,17 @@
             padding: 15px;
         }
     }
+
+    .form-container button {
+    background: #1da1f2; /* Twitter blue */
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    display: block; /* Ensures block-level behavior */
+    margin: 20px auto; /* Centers horizontally */
+    text-align: center;
+}
 </style>
 @endsection

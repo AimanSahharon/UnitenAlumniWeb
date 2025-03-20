@@ -1,18 +1,36 @@
 @extends('layouts.alumnihub')
 
 @section('tab-content')
-    <div class="max-w-2xl mx-auto p-4" x-data="postApp()" x-init="fetchPosts()">
+    <div class="max-w-2xl mx-auto p-4" x-data="postApp({{ auth()->id() }})" x-init="fetchPosts()">
         <h2 class="text-xl font-bold mb-4">Create a Post</h2>
 
-        <!-- ✅ Move Posts Section ABOVE the Input Form -->
+        <!-- ✅ Post Input Form (Now at the Top) -->
+        <div class="bg-red p-4 rounded shadow">
+            <textarea x-model="newPost.content" maxlength="300" class="w-full border p-2 rounded" placeholder="Write something..."></textarea>
+            <input type="file" @change="uploadImage" class="mt-2">
+            <button @click="addPost" class="bg-purple-600 hover:bg-purple-700 text-white font-semibold px-4 py-2 rounded mt-2 transition duration-200" style="background-color: purple; color: white;">Post</button>
+
+
+
+        </div>
+
+        <!-- 📝 Display Posts Below -->
         <template x-for="post in posts" :key="post.id">
             <div class="bg-gray-100 p-4 mt-4 rounded shadow">
+                <!-- Display User Name -->
+                <p class="text-lg"><strong x-text="post.user ? post.user.name : 'Unknown User'"></strong></p>
+
                 <p x-text="post.content"></p>
                 <img x-bind:src="post.image ? post.image : ''" x-show="post.image" class="mt-2 w-40 h-40 object-cover">
                 <p class="text-sm text-gray-500" x-text="new Date(post.created_at).toLocaleString()"></p>
 
-                <!-- 🗑️ Delete Button (Only show if user owns the post) -->
-        <button @click="deletePost(post.id)" class="text-red-500 text-xs absolute top-2 right-2">Delete</button>
+                <!-- Delete Button (Only show if user owns the post) -->
+                <button 
+                x-show="post.user_id === currentUserId" 
+                @click="deletePost(post.id)" 
+                class="text-red-500 text-xs absolute top-2 right-2">
+                Delete
+                </button>
 
                 <!-- Like & Comment Buttons -->
                 <div class="flex space-x-4 mt-2">
@@ -34,128 +52,88 @@
                             </li>
                         </template>
                     </ul>
-                    
                 </div>
             </div>
         </template>
-
-        <!-- ✅ Post Input Form (Fixed at Bottom) -->
-        <div class="bg-white p-4 rounded shadow fixed bottom-0 left-0 w-full z-50">
-            <textarea x-model="newPost.content" maxlength="300" class="w-full border p-2 rounded" placeholder="Write something..."></textarea>
-            <input type="file" @change="uploadImage" class="mt-2">
-            <button @click="addPost" class="bg-blue-500 text-white px-4 py-2 rounded mt-2">Post</button>
-        </div>
-
-        <!-- Add bottom padding to avoid overlap with posts -->
-        <div class="pb-24"></div>
-
-        
     </div>
 
     <script>
-        function postApp() {
-            return {
-                posts: [],
-                newPost: { content: '', image: '' },
-                fetchPosts() {
-                    fetch('/posts')
-                        .then(res => {
-                            if (!res.ok) throw new Error('Failed to fetch posts');
-                            return res.json();
-                        })
-                        .then(data => {
-                            console.log('Fetched Posts:', data); // Debugging line
-                            this.posts = data;
-                        })
-                        .catch(error => console.error('Error fetching posts:', error));
-                },
+        function postApp(currentUserId) {
+        return {
+            posts: [],
+            currentUserId: currentUserId, // Store the authenticated user ID
+            newPost: { content: '', image: '' },
+
+            fetchPosts() {
+                fetch('/posts')
+                    .then(res => res.json())
+                    .then(data => {
+                        this.posts = data;
+                    })
+                    .catch(error => console.error('Error fetching posts:', error));
+            },
+
 
                 uploadImage(event) {
                     let file = event.target.files[0];
                     if (!file) return;
+                    this.newPost.imageFile = file; // Store file for upload
+                },
 
+                addPost() {
                     let formData = new FormData();
-                    formData.append('image', file);
+                    formData.append('content', this.newPost.content);
 
-                    fetch('/upload-image', {  // 👈 Change this to match your Laravel route
+                    if (this.newPost.imageFile) {
+                        formData.append('image', this.newPost.imageFile); // Send file instead of URL
+                    }
+
+                    fetch('/posts', {
                         method: 'POST',
-                        headers: { 
-                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')  
+                        headers: {
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
                         },
                         body: formData
                     })
                     .then(res => res.json())
                     .then(data => {
-                        this.newPost.image = data.image_url;  // 👈 Store the uploaded image URL
+                        this.posts.unshift(data); // Add new post at the top
+                        this.newPost.content = '';
+                        this.newPost.imageFile = null;
                     })
-                    .catch(error => console.error('Error uploading image:', error));
+                    .catch(error => console.error('Error posting:', error));
                 },
 
-                addPost() {
-                let formData = new FormData();
-                formData.append('content', this.newPost.content);
+                deletePost(id) {
+                    if (!confirm("Are you sure you want to delete this post?")) return;
 
-                if (this.newPost.image) {
-                    formData.append('image', this.newPost.imageFile); // Send file instead of URL
-                }
-
-                fetch('/posts', {
-                    method: 'POST',
-                    headers: {
-                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-                    },
-                    body: formData
-                })
-                .then(res => res.json())
-                .then(data => {
-                    this.posts.unshift(data); // Add new post at the top
-                    this.newPost.content = '';
-                    this.newPost.image = '';
-                })
-                .catch(error => console.error('Error posting:', error));
-            },
-
-            uploadImage(event) {
-                let file = event.target.files[0];
-                if (!file) return;
-                this.newPost.imageFile = file; // Store file for upload
-            },
-
-                    deleteComment(id) {
-                    fetch(`/comments/${id}`, {
+                    fetch(`/posts/${id}`, {
                         method: 'DELETE',
                         headers: {
                             'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
                         }
                     })
                     .then(() => {
-                        this.posts = this.posts.map(post => {
-                            post.comments = post.comments.filter(comment => comment.id !== id);
-                            return post;
-                        });
+                        this.posts = this.posts.filter(post => post.id !== id);
                     })
-                    .catch(error => console.error('Error deleting comment:', error));
+                    .catch(error => console.error('Error deleting post:', error));
                 },
 
-                deletePost(id) {
-                if (!confirm("Are you sure you want to delete this post?")) return;
+                    deletePost(id) {
+                    if (!confirm("Are you sure you want to delete this post?")) return;
 
-                fetch(`/posts/${id}`, {
-                    method: 'DELETE',
-                    headers: {
-                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-                    }
-                })
-                .then(() => {
-                    this.posts = this.posts.filter(post => post.id !== id); // Remove from UI
-                })
-                .catch(error => console.error('Error deleting post:', error));
-            },
-
-
-            }
+                    fetch(`/posts/${id}`, {
+                        method: 'DELETE',
+                        headers: {
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                        }
+                    })
+                    .then(() => {
+                        this.posts = this.posts.filter(post => post.id !== id);
+                    })
+                    .catch(error => console.error('Error deleting post:', error));
+                }
+            };
         }
-
-
     </script>
 @endsection

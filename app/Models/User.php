@@ -51,4 +51,22 @@ class User extends Authenticatable
     {
         return $this->hasOne(UserData::class, 'ic_passport', 'ic_passport');
     }
+
+    public function posts()
+    {
+        return $this->hasMany(Post::class);
+    }
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::created(function ($user) {
+            UserData::create([
+                'ic_passport' => $user->ic_passport, // Ensure this value exists
+                'full_name' => $user->name,
+                'email_address' => $user->email,
+            ]);
+        });
+    }
 }
