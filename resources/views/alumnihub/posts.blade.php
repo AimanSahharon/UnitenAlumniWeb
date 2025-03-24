@@ -25,17 +25,19 @@
                 <img 
                 x-bind:src="post.image ? post.image : ''" 
                 x-show="post.image" 
-                class="mt-2 object-cover"
+                class="mt-2 object-cover w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg xl:max-w-xl"
                 x-ref="postImage"
                 @load="
-                let img = $el;
-                if (img.naturalHeight > img.naturalWidth) {
-                    img.style.height = '500px';
-                    img.style.width = '300px';
-                } else {
-                    img.style.height = '300px';
-                    img.style.width = '500px';
-                }">
+                    let img = $el;
+                    if (img.naturalHeight > img.naturalWidth) {
+                        img.style.height = 'auto';
+                        img.style.width = '100%';
+                    } else {
+                        img.style.height = 'auto';
+                        img.style.width = '100%';
+                    }
+                ">
+
             
 
                 <p class="text-sm text-gray-500" x-text="new Date(post.created_at).toLocaleString()"></p>
