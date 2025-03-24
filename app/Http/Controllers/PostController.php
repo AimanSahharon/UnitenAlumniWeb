@@ -173,7 +173,7 @@ class PostController extends Controller
         }
 
         $request->validate([
-            'content' => 'required|string|max:500'
+            'content' => 'nullable|string|max:500'
         ]);
 
         $comment = Comment::create([
@@ -206,6 +206,11 @@ class PostController extends Controller
 
         return response()->json(['message' => 'Post deleted successfully']);
     }
+
+
+
+    
+
 
 
 }

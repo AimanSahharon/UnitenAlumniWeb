@@ -97,6 +97,12 @@ Route::post('/posts/{id}/like', [PostController::class, 'like']);
 Route::post('/posts/{id}/comment', [PostController::class, 'comment']);
 Route::delete('/comments/{id}', [PostController::class, 'deleteComment']);
 Route::delete('/posts/{id}', [PostController::class, 'deletePost']);
+Route::post('/posts/{id}/comment', [PostController::class, 'comment']);
+Route::get('/posts/{id}/comments', function ($id) {
+    return response()->json(\App\Models\Comment::where('post_id', $id)->with('user')->get());
+});
+Route::delete('/comments/{id}', [PostController::class, 'deleteComment']);
+
 
 
 

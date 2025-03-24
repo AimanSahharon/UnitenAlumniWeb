@@ -67,18 +67,29 @@
                 <!-- Comment Section -->
                 <div x-show="post.showComments" class="mt-2 p-2 bg-white border rounded">
                     <input type="text" x-model="post.newComment" placeholder="Write a comment..." class="w-full p-2 border rounded">
-                    <button @click="addComment(post.id, post.newComment)" class="bg-blue-500 text-white px-2 py-1 rounded mt-1">Post Comment</button>
+                    <button @click="addComment(post.id, post.newComment)" class="bg-purple-600 hover:bg-purple-700 text-white font-semibold px-4 py-2 rounded mt-2 transition duration-200" style="background-color: purple; color: white;">Post Comment</button>
 
                     <ul class="mt-2">
-                        <template x-for="comment in post.comments">
-                            <li class="text-sm text-gray-700 flex justify-between">
+                        <template x-if="post.comments.length === 0">
+                            <p class="text-sm text-gray-500">No Comments</p>
+                        </template>
+                    
+                        <template x-for="comment in post.comments" :key="comment.id">
+                            <li class="text-sm text-gray-700 flex justify-between items-center">
                                 <span x-text="comment.content"></span>
                                 <span class="text-xs text-gray-500" x-text="new Date(comment.created_at).toLocaleString()"></span>
-                                <button @click="deleteComment(comment.id)" class="text-red-500 text-xs ml-2">Delete</button>
+                    
+                                <!-- Edit & Delete buttons (Only show for comment owner) -->
+                                <div x-show="comment.user_id === currentUserId">
+                                    <button @click="editComment(comment)" class="text-blue-500 text-xs ml-2">Edit</button>
+                                    <button @click="deleteComment(comment.id, post.id)" class="text-red-500 text-xs ml-2">Delete</button>
+                                </div>
                             </li>
                         </template>
                     </ul>
+                    
                 </div>
+
             </div>
         </template>
     </div>
@@ -94,10 +105,75 @@
                 fetch('/posts')
                     .then(res => res.json())
                     .then(data => {
-                        this.posts = data;
+                        this.posts = data.map(post => ({ 
+                        ...post, 
+                        comments: [],  // Initialize comments array
+                        newComment: '', 
+                        showComments: false
+                    }));
                     })
                     .catch(error => console.error('Error fetching posts:', error));
             },
+                toggleComments(post) {
+                    if (!post.showComments) {
+                        this.fetchComments(post.id, post);
+                    }
+                    post.showComments = !post.showComments;
+                },
+                fetchComments(postId, post) {
+                    fetch(`/posts/${postId}/comments`)
+                        .then(res => res.json())
+                        .then(comments => {
+                            post.comments = comments.length ? comments : []; // Ensure it's always an array
+                        })
+                        .catch(error => console.error('Error fetching comments:', error));
+                },
+
+                addComment(postId, content) {
+                    if (!content.trim()) {
+                        alert("Comment cannot be empty");
+                        return;
+                    }
+
+                    fetch(`/posts/${postId}/comment`, {
+                        method: 'POST',
+                        headers: {
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ content })
+                    })
+                    .then(res => res.json())
+                    .then(comment => {
+                        let post = this.posts.find(p => p.id === postId);
+                        if (post) {
+                            post.comments.push(comment); // Add new comment to UI
+                            post.newComment = ''; // Clear input field
+                        }
+                    })
+                    .catch(error => console.error('Error posting comment:', error));
+                },
+
+                deleteComment(commentId, postId) {
+                    if (!confirm("Are you sure you want to delete this comment?")) return;
+
+                    fetch(`/comments/${commentId}`, {
+                        method: 'DELETE',
+                        headers: {
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                        }
+                    })
+                    .then(() => {
+                        let post = this.posts.find(p => p.id === postId);
+                        if (post) {
+                            post.comments = post.comments.filter(comment => comment.id !== commentId);
+                        }
+                    })
+                    .catch(error => console.error('Error deleting comment:', error));
+                },
+
+
+
 
 
                 uploadImage(event) {
@@ -160,24 +236,24 @@
                     .catch(error => console.error('Error deleting post:', error));
                 },
 
-                    likePost(postId) {
+                likePost(postId) {
                     fetch(`/posts/${postId}/like`, {
                         method: 'POST',
                         headers: {
-                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
-                            'Content-Type': 'application/json'
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
                         }
                     })
                     .then(res => res.json())
                     .then(data => {
                         let post = this.posts.find(p => p.id === postId);
                         if (post) {
-                            post.likes_count = data.likes_count; // Update like count
-                            post.liked_by_user = data.liked; // Toggle liked state
+                            post.liked_by_user = data.liked; // Update UI based on response
+                            post.likes_count = data.likes_count; // Update like count dynamically
                         }
                     })
                     .catch(error => console.error('Error liking post:', error));
                 },
+
 
 
             };
