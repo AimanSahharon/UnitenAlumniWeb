@@ -20,7 +20,8 @@ class PostController extends Controller
     {
         $posts = Post::with('user', 'comments', 'likes')->latest()->get();
         return response()->json($posts);
-    }
+    } 
+
     
 
     /*public function store(Request $request)
@@ -115,7 +116,7 @@ class PostController extends Controller
         return response()->json(['message' => 'Liked']);
     } */
 
-    public function like($id)
+    /*public function like($id)
     {
         if (!Auth::check()) {
             return response()->json(['message' => 'Unauthorized'], 401);
@@ -127,7 +128,32 @@ class PostController extends Controller
         ]);
 
         return response()->json(['message' => 'Liked', 'like' => $like]);
+    } */
+    public function like($id)
+    {
+        if (!Auth::check()) {
+            return response()->json(['message' => 'Unauthorized'], 401);
+        }
+    
+        $userId = Auth::id();
+    
+        // Check if the like already exists
+        $existingLike = Like::where('post_id', $id)->where('user_id', $userId)->first();
+    
+        if ($existingLike) {
+            // Unlike the post (remove the like)
+            $existingLike->delete();
+            return response()->json(['message' => 'Unliked', 'liked' => false, 'likes_count' => Like::where('post_id', $id)->count()]);
+        } else {
+            // Like the post
+            Like::create([
+                'post_id' => $id,
+                'user_id' => $userId,
+            ]);
+            return response()->json(['message' => 'Liked', 'liked' => true, 'likes_count' => Like::where('post_id', $id)->count()]);
+        }
     }
+    
 
 
     /*public function comment(Request $request, $id)

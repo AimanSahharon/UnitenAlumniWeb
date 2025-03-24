@@ -25,4 +25,13 @@ class Post extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    protected $appends = ['likes_count'];
+
+    public function getLikesCountAttribute()
+    {
+        return $this->likes()->count();
+    }
+
+
 }

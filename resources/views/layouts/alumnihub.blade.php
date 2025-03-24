@@ -29,7 +29,7 @@
 <style> 
     .profile-wrapper {
         max-width: 90%;
-        width: 600px;
+        width:600px; /*change width of the profile wrapper white box*/
         margin: 0 auto;
         background: #ffffff;
         border-radius: 10px;

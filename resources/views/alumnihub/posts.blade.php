@@ -42,18 +42,26 @@
 
                 <p class="text-sm text-gray-500" x-text="new Date(post.created_at).toLocaleString()"></p>
 
-                <!-- Delete Button (Only show if user owns the post) -->
-                <button 
-                x-show="post.user_id === currentUserId" 
-                @click="deletePost(post.id)" 
-                class="text-red-500 text-xs absolute top-2 right-2">
-                Delete
-                </button>
+               
 
-                <!-- Like & Comment Buttons -->
+                
                 <div class="flex space-x-4 mt-2">
-                    <button @click="likePost(post.id)" class="text-blue-500">Like (<span x-text="post.likes?.length || 0"></span>)</button>
-                    <button @click="post.showComments = !post.showComments" class="text-blue-500">Comment</button>
+                    <!-- Like & Comment Buttons -->
+                    <!--Like button -->
+                    <button @click="likePost(post.id)" class="bg-blue-500 hover:bg-blue-700 text-white font-semibold px-2 py-1 rounded transition duration-200" style="background-color: blue; color: white;">
+                        <span x-text="post.liked_by_user ? 'Like' : 'Like'"></span>
+                        (<span x-text="post.likes_count"></span>)
+                    </button>
+                    <!--Comment button -->
+                    <button @click="post.showComments = !post.showComments" class="bg-gray-500 hover:bg-gray-700 text-white font-semibold px-2 py-1 rounded transition duration-200" style="background-color: gray; color: white;">Comment</button>
+
+                    <!-- Delete Button (Only show if user owns the post) -->
+                    <button 
+                    x-show="post.user_id === currentUserId" 
+                    @click="deletePost(post.id)" 
+                    class="bg-red-500 hover:bg-red-700 text-white font-semibold px-2 py-1 rounded transition duration-200" style="background-color: red; color: white;">
+                    Delete
+                    </button>
                 </div>
 
                 <!-- Comment Section -->
@@ -152,20 +160,26 @@
                     .catch(error => console.error('Error deleting post:', error));
                 },
 
-                /*    deletePost(id) {
-                    if (!confirm("Are you sure you want to delete this post?")) return;
-
-                    fetch(`/posts/${id}`, {
-                        method: 'DELETE',
+                    likePost(postId) {
+                    fetch(`/posts/${postId}/like`, {
+                        method: 'POST',
                         headers: {
-                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                            'Content-Type': 'application/json'
                         }
                     })
-                    .then(() => {
-                        this.posts = this.posts.filter(post => post.id !== id);
+                    .then(res => res.json())
+                    .then(data => {
+                        let post = this.posts.find(p => p.id === postId);
+                        if (post) {
+                            post.likes_count = data.likes_count; // Update like count
+                            post.liked_by_user = data.liked; // Toggle liked state
+                        }
                     })
-                    .catch(error => console.error('Error deleting post:', error));
-                } */
+                    .catch(error => console.error('Error liking post:', error));
+                },
+
+
             };
         }
     </script>
