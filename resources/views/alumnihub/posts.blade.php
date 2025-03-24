@@ -36,6 +36,7 @@
                     img.style.height = '300px';
                     img.style.width = '500px';
                 }">
+            
 
                 <p class="text-sm text-gray-500" x-text="new Date(post.created_at).toLocaleString()"></p>
 
@@ -49,7 +50,7 @@
 
                 <!-- Like & Comment Buttons -->
                 <div class="flex space-x-4 mt-2">
-                    <button @click="likePost(post.id)" class="text-blue-500">Like (<span x-text="post.likes.length"></span>)</button>
+                    <button @click="likePost(post.id)" class="text-blue-500">Like (<span x-text="post.likes?.length || 0"></span>)</button>
                     <button @click="post.showComments = !post.showComments" class="text-blue-500">Comment</button>
                 </div>
 
@@ -93,17 +94,14 @@
                     let file = event.target.files[0];
                     if (!file) return;
                     this.newPost.imageFile = file; // Store file for upload
+                    this.newPost.image = URL.createObjectURL(file); // Preview image
                 },
 
                 addPost() {
                 let formData = new FormData();
 
                 // Always send content, even if it's empty
-                //formData.append('content', this.newPost.content.trim() || '');
-                if (this.newPost.content.trim()) {
-                formData.append('content', this.newPost.content.trim());
-                }
-
+                formData.append('content', this.newPost.content.trim() || '');
 
                 // Append image if available
                 if (this.newPost.imageFile) {
@@ -130,6 +128,10 @@
                     this.newPost.imageFile = null;
                 })
                 .catch(error => console.error('Error posting:', error));
+                
+                // Get and log the image file before sending
+                let imageFile = formData.get('image');
+                console.log('Image being sent:', imageFile);
             },
 
 
@@ -148,7 +150,7 @@
                     .catch(error => console.error('Error deleting post:', error));
                 },
 
-                    deletePost(id) {
+                /*    deletePost(id) {
                     if (!confirm("Are you sure you want to delete this post?")) return;
 
                     fetch(`/posts/${id}`, {
@@ -161,7 +163,7 @@
                         this.posts = this.posts.filter(post => post.id !== id);
                     })
                     .catch(error => console.error('Error deleting post:', error));
-                }
+                } */
             };
         }
     </script>

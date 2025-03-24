@@ -85,7 +85,7 @@ class PostController extends Controller
     
         $request->validate([
             'content' => 'nullable|string',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048'
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:5120'
         ]);
 
         if (!$request->has('content') && !$request->hasFile('image')) {
@@ -109,13 +109,28 @@ class PostController extends Controller
 
     
 
-    public function like($id)
+    /*public function like($id)
     {
         Like::create(['post_id' => $id]);
         return response()->json(['message' => 'Liked']);
+    } */
+
+    public function like($id)
+    {
+        if (!Auth::check()) {
+            return response()->json(['message' => 'Unauthorized'], 401);
+        }
+
+        $like = Like::firstOrCreate([
+            'post_id' => $id,
+            'user_id' => Auth::id(),
+        ]);
+
+        return response()->json(['message' => 'Liked', 'like' => $like]);
     }
 
-    public function comment(Request $request, $id)
+
+    /*public function comment(Request $request, $id)
     {
         $comment = Comment::create([
             'post_id' => $id,
@@ -123,7 +138,27 @@ class PostController extends Controller
         ]);
 
         return response()->json($comment);
+    } */
+
+    public function comment(Request $request, $id)
+    {
+        if (!Auth::check()) {
+            return response()->json(['message' => 'Unauthorized'], 401);
+        }
+
+        $request->validate([
+            'content' => 'required|string|max:500'
+        ]);
+
+        $comment = Comment::create([
+            'post_id' => $id,
+            'user_id' => Auth::id(),
+            'content' => $request->content
+        ]);
+
+        return response()->json($comment->load('user'));
     }
+
 
     public function deleteComment($id)
     {

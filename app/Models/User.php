@@ -57,7 +57,7 @@ class User extends Authenticatable
         return $this->hasMany(Post::class);
     }
 
-    protected static function boot()
+    /*protected static function boot() //Once user register, insert some data into user_data table
     {
         parent::boot();
 
@@ -68,5 +68,20 @@ class User extends Authenticatable
                 'email_address' => $user->email,
             ]);
         });
+    } */
+
+    protected static function boot() //Once user register, insert some data into user_data table
+    {
+        parent::boot();
+
+        static::created(function ($user) {
+            // Check if the ic_passport already exists in user_data
+            if (!UserData::where('ic_passport', $user->ic_passport)->exists()) {
+                UserData::create([
+                    'ic_passport' => $user->ic_passport, // Only insert ic_passport
+                ]);
+            }
+        });
     }
+
 }
