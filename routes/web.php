@@ -102,6 +102,7 @@ Route::get('/posts/{id}/comments', function ($id) {
     return response()->json(\App\Models\Comment::where('post_id', $id)->with('user')->get());
 });
 Route::delete('/comments/{id}', [PostController::class, 'deleteComment']);
+Route::get('/posts/{postId}/comments', [PostController::class, 'getComments']);
 
 
 

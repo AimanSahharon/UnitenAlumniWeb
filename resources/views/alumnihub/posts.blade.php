@@ -74,19 +74,29 @@
                             <p class="text-sm text-gray-500">No Comments</p>
                         </template>
                     
-                        <template x-for="comment in post.comments" :key="comment.id">
-                            <li class="text-sm text-gray-700 flex justify-between items-center">
-                                <span x-text="comment.content"></span>
-                                <span class="text-xs text-gray-500" x-text="new Date(comment.created_at).toLocaleString()"></span>
-                    
-                                <!-- Edit & Delete buttons (Only show for comment owner) -->
-                                <div x-show="comment.user_id === currentUserId">
-                                    <button @click="editComment(comment)" class="text-blue-500 text-xs ml-2">Edit</button>
-                                    <button @click="deleteComment(comment.id, post.id)" class="text-red-500 text-xs ml-2">Delete</button>
+                        <template x-for="(comment, index) in [...post.comments].reverse()" :key="comment.id">
+                            <div>
+                                <!-- Comment Card -->
+                                <div class="bg-gray-100 p-3 rounded shadow-md mt-2">
+                                    <p class="text-xs font-bold text-gray-800" x-text="comment.user ? comment.user.name : 'Unknown User'"></p>
+                                    <p class="text-sm text-gray-700 mt-1" x-text="comment.content"></p>
+                                    <p class="text-xs text-gray-500 mt-1" x-text="new Date(comment.created_at).toLocaleString()"></p>
+                                    
+                                    <!-- Edit & Delete buttons (Only for the comment owner) -->
+                                    <div x-show="comment.user_id === currentUserId" class="mt-1">
+                                        <button @click="editComment(comment)" class="text-blue-500 text-xs mr-2">Edit</button>
+                                        <button @click="deleteComment(comment.id, post.id)" class="text-red-500 text-xs">Delete</button>
+                                    </div>
                                 </div>
-                            </li>
+                        
+                                <!-- Line Separator (except after the last comment) -->
+                                <hr x-show="index !== post.comments.length - 1" class="border-gray-300 my-2">
+                            </div>
                         </template>
+                        
+                        
                     </ul>
+                    
                     
                 </div>
 
@@ -107,7 +117,7 @@
                     .then(data => {
                         this.posts = data.map(post => ({ 
                         ...post, 
-                        comments: [],  // Initialize comments array
+                        //comments: [],  // Initialize comments array
                         newComment: '', 
                         showComments: false
                     }));
@@ -124,10 +134,12 @@
                     fetch(`/posts/${postId}/comments`)
                         .then(res => res.json())
                         .then(comments => {
-                            post.comments = comments.length ? comments : []; // Ensure it's always an array
+                            // Sort comments by created_at in descending order
+                            post.comments = comments.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
                         })
-                        .catch(error => console.error('Error fetching comments:', error));
+                        .catch(error => console.error('Error fetching comments:', error)); 
                 },
+
 
                 addComment(postId, content) {
                     if (!content.trim()) {
@@ -147,12 +159,20 @@
                     .then(comment => {
                         let post = this.posts.find(p => p.id === postId);
                         if (post) {
-                            post.comments.push(comment); // Add new comment to UI
+                            post.comments.unshift(comment); // Insert new comment at the top
                             post.newComment = ''; // Clear input field
                         }
                     })
                     .catch(error => console.error('Error posting comment:', error));
                 },
+
+
+
+
+
+
+
+
 
                 deleteComment(commentId, postId) {
                     if (!confirm("Are you sure you want to delete this comment?")) return;
@@ -253,6 +273,12 @@
                     })
                     .catch(error => console.error('Error liking post:', error));
                 },
+                    /*startPolling() {
+                    setInterval(() => {
+                        this.fetchPosts(); // Refresh posts and their comments
+                    }, 5000); // Fetch every 5 seconds
+                },*/
+
 
 
 
