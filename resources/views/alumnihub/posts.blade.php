@@ -4,6 +4,13 @@
     <div class="max-w-2xl mx-auto p-4" x-data="postApp({{ auth()->id() }})" x-init="fetchPosts()">
         <h2 class="text-xl font-bold mb-4">Create a Post</h2>
 
+        <!-- 🔎 Search Bar -->
+        <input type="text" x-model="searchQuery" @input="filterPosts"
+       placeholder="Search posts by author or content..." style="width: 100%;"
+       class="w-full p-3 border rounded-lg mb-4 shadow-md">
+
+        
+
         <!-- ✅ Post Input Form (Now at the Top) -->
         <div class="bg-red p-4 rounded shadow">
             <textarea x-model="newPost.content" maxlength="300" class="w-full border p-2 rounded" placeholder="Write something..."></textarea>
@@ -15,7 +22,7 @@
         </div>
 
         <!-- 📝 Display Posts Below -->
-        <template x-for="post in posts" :key="post.id">
+        <template x-for="post in filteredPosts" :key="post.id">
             <div class="bg-gray-100 p-4 mt-4 rounded shadow">
                 <!-- Display User Name -->
                 <p class="text-lg"><strong x-text="post.user ? post.user.name : 'Unknown User'"></strong></p>
@@ -161,6 +168,8 @@
         function postApp(currentUserId) {
         return {
             posts: [],
+            filteredPosts: [], // Stores posts after filtering
+            searchQuery: "", // Stores search input
             currentUserId: currentUserId, // Store the authenticated user ID
 
             editPost(post) {
@@ -284,6 +293,7 @@
                         newComment: '', 
                         showComments: false
                     }));
+                    this.filteredPosts = this.posts; // Set initial filtered list
                     })
                     .catch(error => console.error('Error fetching posts:', error));
             },
@@ -427,6 +437,22 @@
                         }
                     })
                     .catch(error => console.error('Error liking post:', error));
+                },
+
+                filterPosts() {
+                    if (!this.searchQuery.trim()) {
+                        this.filteredPosts = this.posts; // Reset when input is empty
+                        return;
+                    }
+
+                    let query = this.searchQuery.toLowerCase();
+                    
+                    this.filteredPosts = this.posts.filter(post => {
+                        let author = post.user ? post.user.name.toLowerCase() : '';
+                        let content = post.content ? post.content.toLowerCase() : '';
+
+                        return author.includes(query) || content.includes(query);
+                    });
                 },
 
 
