@@ -94,6 +94,9 @@ Route::get('/posts.view', function () {
 Route::get('/posts', [PostController::class, 'index']);
 Route::post('/posts', [PostController::class, 'store'])->name('posts.store');
 Route::post('/posts/{id}/like', [PostController::class, 'like']);
+Route::put('/posts/{post}', [PostController::class, 'updatePost'])->middleware('auth');
+
+
 Route::post('/posts/{id}/comment', [PostController::class, 'comment']);
 Route::delete('/comments/{id}', [PostController::class, 'deleteComment']);
 Route::delete('/posts/{id}', [PostController::class, 'deletePost']);
@@ -103,6 +106,7 @@ Route::get('/posts/{id}/comments', function ($id) {
 });
 Route::delete('/comments/{id}', [PostController::class, 'deleteComment']);
 Route::get('/posts/{postId}/comments', [PostController::class, 'getComments']);
+Route::put('/comments/{comment}', [PostController::class, 'updateComment']);
 
 
 

@@ -20,41 +20,7 @@
                 <!-- Display User Name -->
                 <p class="text-lg"><strong x-text="post.user ? post.user.name : 'Unknown User'"></strong></p>
 
-                <template x-if="post.editing">
-                    <div>
-                        <textarea x-model="post.editedContent" class="w-full border p-2 rounded"></textarea>
-                        
-                <!-- Image Preview (When Editing) -->
-                <template x-if="post.editedImage">
-                    <img :src="post.editedImage" 
-                        class="mt-2 object-cover w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg xl:max-w-xl"
-                        x-ref="editedPostImage"
-                        @load="
-                            let img = $el;
-                            if (img.naturalHeight > img.naturalWidth) {
-                                img.style.width = '100%';
-                                img.style.height = 'auto';
-                            } else {
-                                img.style.width = '100%';
-                                img.style.height = 'auto';
-                            }
-                        ">
-                </template>
-
-                
-                        <!-- Upload New Image -->
-                        <input type="file" @change="updateImage($event, post)" class="mt-2">
-                
-                        <!-- Remove Image Button -->
-                        <button @click="removeImage(post)" class="bg-red-500 text-white px-3 py-1 rounded mt-2" style="background-color: red; color: white;">
-                            Remove Image
-                        </button>
-                    </div>
-                </template>
-                
-                <template x-if="!post.editing">
-                    <p x-text="post.content"></p>
-                </template>
+                <p x-text="post.content"></p>
                 <!-- Display the image based on whether it is landscape or portrait ot preserve its aspect ratio. @ load is to fix the issue with when user refresh the images resize on its own -->
                 <img 
                 x-bind:src="post.image ? post.image : ''" 
@@ -72,8 +38,6 @@
                     }
                 ">
 
-                
-
             
 
                 <p class="text-sm text-gray-500" x-text="new Date(post.created_at).toLocaleString()"></p>
@@ -90,15 +54,6 @@
                     </button>
                     <!--Comment button -->
                     <button @click="post.showComments = !post.showComments" class="bg-gray-500 hover:bg-gray-700 text-white font-semibold px-2 py-1 rounded transition duration-200" style="background-color: gray; color: white;">Comment</button>
-
-                    <button @click="editPost(post)" 
-                    x-show="post.user_id === currentUserId"
-                    class="bg-orange-500 hover:bg-orange-700 text-white font-semibold px-2 py-1 rounded transition duration-200" style="background-color: orange; color: white;">
-                    <span x-text="post.editing ? 'Cancel' : 'Edit'"></span>
-                    </button>
-            
-                    <button x-show="post.editing" @click="saveEditedPost(post)" class="bg-green-500 hover:bg-green-700 text-white font-semibold px-2 py-1 rounded transition duration-200" style="background-color: green; color: white;">Save</button>
-
 
                     <!-- Delete Button (Only show if user owns the post) -->
                     <button 
@@ -121,32 +76,23 @@
                     
                         <template x-for="(comment, index) in [...post.comments].reverse()" :key="comment.id">
                             <div>
+                                <!-- Comment Card -->
                                 <div class="bg-gray-100 p-3 rounded shadow-md mt-2">
-                                    <p class="text-xs font-black text-gray-800" x-text="comment.user ? comment.user.name : 'Unknown User'"></p>
-                                    
-                                    <!-- Conditional Rendering: Show Text or Input Field -->
-                                    <template x-if="comment.editing">
-                                        <input type="text" x-model="comment.editedContent" class="w-full p-2 border rounded" />
-                                    </template>
-                                    <template x-if="!comment.editing">
-                                        <p class="text-sm text-gray-700 mt-1" x-text="comment.content"></p>
-                                    </template>
-                        
+                                    <p class="text-xs font-black text-gray-800" style="font-weight: bold;" x-text="comment.user ? comment.user.name : 'Unknown User'"></p>
+                                    <p class="text-sm text-gray-700 mt-1" x-text="comment.content"></p>
                                     <p class="text-xs text-gray-500 mt-1" x-text="new Date(comment.created_at).toLocaleString()"></p>
-                        
+                                    
+                                    <!-- Edit & Delete buttons (Only for the comment owner) -->
                                     <div x-show="comment.user_id === currentUserId" class="mt-1">
-                                        <!-- Edit Button -->
-                                        <button @click="editComment(comment)" class="bg-yellow-500 hover:bg-yellow-700 text-white font-semibold px-2 py-1 rounded transition duration-200" style="background-color: rgb(243, 243, 108); color: white;">Edit</button>
-                                        <button @click="deleteComment(comment.id, post.id)" class="bg-red-500 hover:bg-red-700 text-white font-semibold px-2 py-1 rounded transition duration-200" style="background-color: red; color: white;">Delete</button>
-                                        
-                                        <!-- Save Button (Appears When Editing) -->
-                                        <button x-show="comment.editing" @click="saveEditedComment(comment, post.id)" class="bg-green-500 hover:bg-green-700 text-white font-semibold px-2 py-1 rounded transition duration-200" style="background-color: green; color: white;">Save</button>
+                                        <button @click="editComment(comment)" class="text-blue-500 text-xs mr-2">Edit</button>
+                                        <button @click="deleteComment(comment.id, post.id)" class="text-red-500 text-xs">Delete</button>
                                     </div>
                                 </div>
                         
+                                <!-- Line Separator (except after the last comment) -->
                                 <hr x-show="index !== post.comments.length - 1" class="border-gray-300 my-2">
                             </div>
-                        </template>                        
+                        </template>
                     </ul>
                     
                     
@@ -162,117 +108,6 @@
         return {
             posts: [],
             currentUserId: currentUserId, // Store the authenticated user ID
-
-            editPost(post) {
-                // Toggle edit mode
-                post.editing = !post.editing; 
-               // If switching to edit mode, populate edit fields
-                if (post.editing) {
-                    post.editedContent = post.content; // Pre-fill input with existing content
-                    post.editedImage = post.image; // Keep track of existing image
-                    post.imageFile = null; // Reset file input
-                }
-            },
-
-            updateImage(event, post) {
-                let file = event.target.files[0];
-                if (!file) return;
-                
-                post.imageFile = file;
-                post.editedImage = URL.createObjectURL(file); // Show preview of the new image
-            },
-
-            removeImage(post) {
-                post.editedImage = null; // Clear the preview
-                post.imageFile = null; // Ensure no new file is selected
-                post.removeImageFlag = true; // Mark for backend removal
-            },
-
-            saveEditedPost(post) {
-                if (!post.editedContent.trim() && !post.imageFile && !post.editedImage) {
-                    alert("Post must have text or an image.");
-                    return;
-                }
-
-                let formData = new FormData();
-                formData.append('_method', 'PUT'); // Required for Laravel to accept PUT
-                formData.append('content', post.editedContent.trim() || '');
-                
-                if (post.imageFile) {
-                    formData.append('image', post.imageFile);
-                }
-
-                if (post.removeImageFlag) {
-                    formData.append('remove_image', 'true');
-                }
-
-                fetch(`/posts/${post.id}`, {
-                    method: 'POST', // Laravel needs `_method: 'PUT'` for FormData
-                    headers: {
-                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-                    },
-                    body: formData
-                })
-                .then(res => {
-                    if (!res.ok) throw new Error('Failed to update post');
-                    return res.json();
-                })
-                .then(updatedPost => {
-                    post.content = updatedPost.content;
-                    post.image = updatedPost.image; // Update the displayed image
-                    post.editing = false; // Exit edit mode
-                })
-                .catch(error => console.error('Error updating post:', error));
-            },
-
-
-
-
-
-
-
-            editComment(comment) {
-                comment.editing = true;
-                comment.editedContent = comment.content || ''; // Pre-fill with existing content
-            },
-
-            saveEditedComment(comment, postId) {
-                if (!comment.editedContent.trim()) {
-                    alert("Comment cannot be empty");
-                    return;
-                }
-
-                fetch(`/comments/${comment.id}`, {
-                    method: 'PUT',
-                    headers: {
-                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ content: comment.editedContent })
-                })
-                .then(res => {
-                    if (!res.ok) {
-                        throw new Error('Failed to update comment');
-                    }
-                    return res.json();
-                })
-                .then(updatedComment => {
-                    let post = this.posts.find(p => p.id === postId);
-                    if (post) {
-                        let existingComment = post.comments.find(c => c.id === comment.id);
-                        if (existingComment) {
-                            existingComment.content = updatedComment.content; // Update UI
-                            existingComment.editing = false; // Exit edit mode
-                            existingComment.editedContent = ""; // Clear input
-                        }
-                    }
-                })
-                .catch(error => console.error('Error updating comment:', error));
-            },
-
-
-
-
             newPost: { content: '', image: '' },
 
             fetchPosts() {

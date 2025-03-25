@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\Post;
 use App\Models\Comment;
 use App\Models\Like;
+use Illuminate\Support\Facades\Storage;
 
 class PostController extends Controller
 {
@@ -206,6 +207,89 @@ class PostController extends Controller
 
         return response()->json(['message' => 'Post deleted successfully']);
     }
+
+    public function updateComment (Request $request, Comment $comment)
+    {
+        $request->validate([
+            'content' => 'required|string|max:500',
+        ]);
+
+        $comment->update([
+            'content' => $request->content,
+        ]);
+
+        return response()->json($comment);
+    }
+
+    /*public function updatePost(Request $request, Post $post)
+    {
+        if (Auth::id() !== $post->user_id) {
+            return response()->json(['message' => 'Unauthorized'], 403);
+        }
+
+        $request->validate([
+            'content' => 'nullable|string|max:300',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:5120'
+        ]);
+
+        if (!$request->has('content') && !$request->hasFile('image')) {
+            return response()->json(['error' => 'Post must have content or an image'], 422);
+        }
+
+        if ($request->hasFile('image')) {
+            $imagePath = $request->file('image')->store('uploads', 'public');
+            $post->image = "/storage/{$imagePath}";
+        }
+
+        if ($request->has('content')) {
+            $post->content = $request->content;
+        }
+
+        $post->save();
+
+        return response()->json($post);
+    } */
+
+    public function updatePost(Request $request, Post $post)
+    {
+        if (Auth::id() !== $post->user_id) {
+            return response()->json(['message' => 'Unauthorized'], 403);
+        }
+
+        $request->validate([
+            'content' => 'nullable|string|max:300',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:5120'
+        ]);
+
+        if ($request->has('content')) {
+            $post->content = $request->content;
+        }
+
+        // Handle image removal
+        if ($request->has('remove_image')) {
+            if ($post->image) {
+                Storage::delete(str_replace('/storage/', 'public/', $post->image)); // Fix: Use `Storage` facade
+                $post->image = null;
+            }
+        }
+
+        // Handle new image upload
+        if ($request->hasFile('image')) {
+            $imagePath = $request->file('image')->store('uploads', 'public');
+            $post->image = "/storage/{$imagePath}";
+        }
+
+        $post->save();
+
+        return response()->json($post);
+    }
+
+    
+
+
+
+
+
 
 
 

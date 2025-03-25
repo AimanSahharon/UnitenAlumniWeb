@@ -21,37 +21,8 @@
                 <p class="text-lg"><strong x-text="post.user ? post.user.name : 'Unknown User'"></strong></p>
 
                 <template x-if="post.editing">
-                    <div>
-                        <textarea x-model="post.editedContent" class="w-full border p-2 rounded"></textarea>
-                        
-                <!-- Image Preview (When Editing) -->
-                <template x-if="post.editedImage">
-                    <img :src="post.editedImage" 
-                        class="mt-2 object-cover w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg xl:max-w-xl"
-                        x-ref="editedPostImage"
-                        @load="
-                            let img = $el;
-                            if (img.naturalHeight > img.naturalWidth) {
-                                img.style.width = '100%';
-                                img.style.height = 'auto';
-                            } else {
-                                img.style.width = '100%';
-                                img.style.height = 'auto';
-                            }
-                        ">
+                    <textarea x-model="post.editedContent" class="w-full border p-2 rounded"></textarea>
                 </template>
-
-                
-                        <!-- Upload New Image -->
-                        <input type="file" @change="updateImage($event, post)" class="mt-2">
-                
-                        <!-- Remove Image Button -->
-                        <button @click="removeImage(post)" class="bg-red-500 text-white px-3 py-1 rounded mt-2" style="background-color: red; color: white;">
-                            Remove Image
-                        </button>
-                    </div>
-                </template>
-                
                 <template x-if="!post.editing">
                     <p x-text="post.content"></p>
                 </template>
@@ -91,12 +62,7 @@
                     <!--Comment button -->
                     <button @click="post.showComments = !post.showComments" class="bg-gray-500 hover:bg-gray-700 text-white font-semibold px-2 py-1 rounded transition duration-200" style="background-color: gray; color: white;">Comment</button>
 
-                    <button @click="editPost(post)" 
-                    x-show="post.user_id === currentUserId"
-                    class="bg-orange-500 hover:bg-orange-700 text-white font-semibold px-2 py-1 rounded transition duration-200" style="background-color: orange; color: white;">
-                    <span x-text="post.editing ? 'Cancel' : 'Edit'"></span>
-                    </button>
-            
+                    <button @click="editPost(post)" x-show="post.user_id === currentUserId" class="bg-orange-500 hover:bg-orange-700 text-white font-semibold px-2 py-1 rounded transition duration-200" style="background-color: orange; color: white;">Edit</button>
                     <button x-show="post.editing" @click="saveEditedPost(post)" class="bg-green-500 hover:bg-green-700 text-white font-semibold px-2 py-1 rounded transition duration-200" style="background-color: green; color: white;">Save</button>
 
 
@@ -164,50 +130,26 @@
             currentUserId: currentUserId, // Store the authenticated user ID
 
             editPost(post) {
-                // Toggle edit mode
-                post.editing = !post.editing; 
-               // If switching to edit mode, populate edit fields
-                if (post.editing) {
-                    post.editedContent = post.content; // Pre-fill input with existing content
-                    post.editedImage = post.image; // Keep track of existing image
-                    post.imageFile = null; // Reset file input
-                }
-            },
-
-            updateImage(event, post) {
-                let file = event.target.files[0];
-                if (!file) return;
-                
-                post.imageFile = file;
-                post.editedImage = URL.createObjectURL(file); // Show preview of the new image
-            },
-
-            removeImage(post) {
-                post.editedImage = null; // Clear the preview
-                post.imageFile = null; // Ensure no new file is selected
-                post.removeImageFlag = true; // Mark for backend removal
+                post.editing = true;
+                post.editedContent = post.content; // Pre-fill input with existing content
             },
 
             saveEditedPost(post) {
-                if (!post.editedContent.trim() && !post.imageFile && !post.editedImage) {
-                    alert("Post must have text or an image.");
+                if (!post.editedContent.trim() && !post.imageFile) {
+                    alert("Post content cannot be empty");
                     return;
                 }
 
                 let formData = new FormData();
-                formData.append('_method', 'PUT'); // Required for Laravel to accept PUT
+                formData.append('_method', 'PUT'); // Laravel requires this for FormData PUT requests
                 formData.append('content', post.editedContent.trim() || '');
-                
+
                 if (post.imageFile) {
                     formData.append('image', post.imageFile);
                 }
 
-                if (post.removeImageFlag) {
-                    formData.append('remove_image', 'true');
-                }
-
                 fetch(`/posts/${post.id}`, {
-                    method: 'POST', // Laravel needs `_method: 'PUT'` for FormData
+                    method: 'POST', // Use POST with `_method=PUT` for Laravel to recognize it as PUT
                     headers: {
                         'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
                     },
@@ -219,12 +161,11 @@
                 })
                 .then(updatedPost => {
                     post.content = updatedPost.content;
-                    post.image = updatedPost.image; // Update the displayed image
-                    post.editing = false; // Exit edit mode
+                    post.image = updatedPost.image;
+                    post.editing = false;
                 })
                 .catch(error => console.error('Error updating post:', error));
             },
-
 
 
 
