@@ -18,7 +18,7 @@ class PostController extends Controller
 
     public function index()
     {
-        $posts = Post::with('user', 'comments', 'likes')->latest()->get();
+        $posts = Post::with('user', 'comments.user', 'likes')->latest()->get();
         return response()->json($posts);
     } 
 
@@ -182,9 +182,6 @@ class PostController extends Controller
             'content' => $request->content
         ]);
 
-        // Reload comment with user details
-        $comment->load('user');
-
         return response()->json($comment->load('user'));
     }
 
@@ -209,16 +206,6 @@ class PostController extends Controller
 
         return response()->json(['message' => 'Post deleted successfully']);
     }
-
-    public function getComments($postId)
-    {
-        $comments = Comment::with('user')->where('post_id', $postId)->get();
-    
-        return response()->json([
-            'comments' => $comments
-        ]);
-    }
-
 
 
 

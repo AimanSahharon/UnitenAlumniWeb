@@ -93,9 +93,8 @@
                                 <hr x-show="index !== post.comments.length - 1" class="border-gray-300 my-2">
                             </div>
                         </template>
-                        
-                        
                     </ul>
+                    
                     
                     
                 </div>
@@ -117,7 +116,6 @@
                     .then(data => {
                         this.posts = data.map(post => ({ 
                         ...post, 
-                        //comments: [],  // Initialize comments array
                         newComment: '', 
                         showComments: false
                     }));
@@ -134,12 +132,10 @@
                     fetch(`/posts/${postId}/comments`)
                         .then(res => res.json())
                         .then(comments => {
-                            // Sort comments by created_at in descending order
-                            post.comments = comments.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+                            post.comments = comments.length ? comments : []; // Ensure it's always an array
                         })
-                        .catch(error => console.error('Error fetching comments:', error)); 
+                        .catch(error => console.error('Error fetching comments:', error));
                 },
-
 
                 addComment(postId, content) {
                     if (!content.trim()) {
@@ -159,19 +155,13 @@
                     .then(comment => {
                         let post = this.posts.find(p => p.id === postId);
                         if (post) {
-                            post.comments.unshift(comment); // Insert new comment at the top
+                            // **Instead of pushing, re-fetch the comments from the server**
+                            this.fetchComments(postId, post);
                             post.newComment = ''; // Clear input field
                         }
                     })
                     .catch(error => console.error('Error posting comment:', error));
                 },
-
-
-
-
-
-
-
 
 
                 deleteComment(commentId, postId) {
@@ -273,12 +263,6 @@
                     })
                     .catch(error => console.error('Error liking post:', error));
                 },
-                    /*startPolling() {
-                    setInterval(() => {
-                        this.fetchPosts(); // Refresh posts and their comments
-                    }, 5000); // Fetch every 5 seconds
-                },*/
-
 
 
 
