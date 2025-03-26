@@ -216,6 +216,7 @@ class PostController extends Controller
 
         $comment->update([
             'content' => $request->content,
+            'updated_at' => now() // Ensure updated timestamp
         ]);
 
         return response()->json($comment);
@@ -281,7 +282,13 @@ class PostController extends Controller
 
         $post->save();
 
-        return response()->json($post);
+        return response()->json([
+            'id' => $post->id,
+            'content' => $post->content,
+            'image' => $post->image,
+            'created_at' => $post->created_at,
+            'updated_at' => $post->updated_at, // Ensure this is included
+        ]);
     }
 
     

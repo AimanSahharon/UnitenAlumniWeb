@@ -83,7 +83,16 @@
 
             
 
-                <p class="text-sm text-gray-500" x-text="new Date(post.created_at).toLocaleString()"></p>
+                <p class="text-sm text-gray-500">
+                    <span x-text="new Date(post.created_at).toLocaleString()"></span>
+                </p>
+                
+                <template x-if="post.updated_at && post.updated_at !== post.created_at">
+                    <p class="text-sm text-gray-500">
+                        Updated at: <span x-text="new Date(post.updated_at).toLocaleString()"></span>
+                    </p>
+                </template>
+                
 
                
 
@@ -138,8 +147,18 @@
                                     <template x-if="!comment.editing">
                                         <p class="text-sm text-gray-700 mt-1" x-text="comment.content"></p>
                                     </template>
+
+                                     <!-- ✅ Display the timestamp for when the comment was created -->
+                                    <p class="text-xs text-gray-500">
+                                        <span x-text="new Date(comment.created_at).toLocaleString()"></span>
+                                    </p>
                         
-                                    <p class="text-xs text-gray-500 mt-1" x-text="new Date(comment.created_at).toLocaleString()"></p>
+                                    <template x-if="comment.updated_at && comment.updated_at !== comment.created_at">
+                                        <p class="text-xs text-gray-500">
+                                            Updated at: <span x-text="new Date(comment.updated_at).toLocaleString()"></span>
+                                        </p>
+                                    </template>
+                                    
                         
                                     <div x-show="comment.user_id === currentUserId" class="mt-1">
                                         <!-- Edit Button -->
@@ -229,6 +248,7 @@
                 .then(updatedPost => {
                     post.content = updatedPost.content;
                     post.image = updatedPost.image; // Update the displayed image
+                    post.updated_at = updatedPost.updated_at; // Update the timestamp
                     post.editing = false; // Exit edit mode
                 })
                 .catch(error => console.error('Error updating post:', error));
@@ -271,6 +291,7 @@
                         let existingComment = post.comments.find(c => c.id === comment.id);
                         if (existingComment) {
                             existingComment.content = updatedComment.content; // Update UI
+                            existingComment.updated_at = updatedComment.updated_at; // Update timestamp
                             existingComment.editing = false; // Exit edit mode
                             existingComment.editedContent = ""; // Clear input
                         }
@@ -416,7 +437,9 @@
                         }
                     })
                     .then(() => {
+                        // Remove post from both posts and filteredPosts
                         this.posts = this.posts.filter(post => post.id !== id);
+                        this.filteredPosts = this.filteredPosts.filter(post => post.id !== id);
                     })
                     .catch(error => console.error('Error deleting post:', error));
                 },
