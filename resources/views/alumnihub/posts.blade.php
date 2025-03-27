@@ -138,7 +138,9 @@
                         <template x-for="(comment, index) in [...post.comments].reverse()" :key="comment.id">
                             <div>
                                 <div class="bg-gray-100 p-3 rounded shadow-md mt-2">
-                                    <p class="text-xs font-black text-gray-800" x-text="comment.user ? comment.user.name : 'Unknown User'"></p>
+                                    <!--<p class="text-xs font-bold text-red-500" x-text="comment.user ? comment.user.name : 'Unknown User'"></p> -->
+                                    <p class="text-lg"><strong x-text="comment.user ? comment.user.name : 'Unknown User'"></strong></p>
+
                                     
                                     <!-- Conditional Rendering: Show Text or Input Field -->
                                     <template x-if="comment.editing">
@@ -162,7 +164,7 @@
                         
                                     <div x-show="comment.user_id === currentUserId" class="mt-1">
                                         <!-- Edit Button -->
-                                        <button @click="editComment(comment)" class="bg-yellow-500 hover:bg-yellow-700 text-white font-semibold px-2 py-1 rounded transition duration-200" style="background-color: rgb(243, 243, 108); color: white;">Edit</button>
+                                        <button @click="editComment(comment)" class="bg-orange-500 hover:bg-orange-700 text-white font-semibold px-2 py-1 rounded transition duration-200" style="background-color: orange; color: white;">Edit</button>
                                         <button @click="deleteComment(comment.id, post.id)" class="bg-red-500 hover:bg-red-700 text-white font-semibold px-2 py-1 rounded transition duration-200" style="background-color: red; color: white;">Delete</button>
                                         
                                         <!-- Save Button (Appears When Editing) -->
@@ -217,7 +219,7 @@
             },
 
             saveEditedPost(post) {
-                if (!post.editedContent.trim() && !post.imageFile && !post.editedImage) {
+                if (!post.editedContent.trim() && !post.imageFile && !post.editedImage) { //if the post is empty with empty spaces and does not have an image then display an error message
                     alert("Post must have text or an image.");
                     return;
                 }
@@ -253,12 +255,6 @@
                 })
                 .catch(error => console.error('Error updating post:', error));
             },
-
-
-
-
-
-
 
             editComment(comment) {
                 comment.editing = true;
@@ -299,9 +295,6 @@
                 })
                 .catch(error => console.error('Error updating comment:', error));
             },
-
-
-
 
             newPost: { content: '', image: '' },
 
@@ -440,6 +433,7 @@
                         // Remove post from both posts and filteredPosts
                         this.posts = this.posts.filter(post => post.id !== id);
                         this.filteredPosts = this.filteredPosts.filter(post => post.id !== id);
+                        this.filterPosts(); //after the post is delete refresh and show the updated posts
                     })
                     .catch(error => console.error('Error deleting post:', error));
                 },

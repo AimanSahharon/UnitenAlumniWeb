@@ -4,14 +4,14 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use App\Models\Post;
-use App\Models\Comment;
-use App\Models\Like;
+use App\Models\BusinessListingPost;
+use App\Models\BusinessListingComment;
+use App\Models\BusinessListingLike;
 use Illuminate\Support\Facades\Storage;
 
-class PostController extends Controller
+class BusinessListingController extends Controller
 {
-    /*public function index()
+     /*public function index()
     {
         $posts = Post::with('comments', 'likes')->latest()->get();
         return response()->json($posts);
@@ -19,7 +19,7 @@ class PostController extends Controller
 
     public function index()
     {
-        $posts = Post::with('user', 'comments.user', 'likes')->latest()->get();
+        $posts = BusinessListingPost::with('user', 'comments.user', 'likes')->latest()->get();
         return response()->json($posts);
     } 
 
@@ -99,7 +99,7 @@ class PostController extends Controller
             $imagePath = $request->file('image')->store('uploads', 'public');
         }
     
-        $post = Post::create([
+        $post = BusinessListingPost::create([
             'user_id' => Auth::id(), // Using Auth facade instead of auth()
             'content' => $request->content,
             'image' => $imagePath ? "/storage/{$imagePath}" : null,
@@ -113,7 +113,7 @@ class PostController extends Controller
 
     /*public function like($id)
     {
-        Like::create(['post_id' => $id]);
+        Like::create(['business_listing_post_id' => $id]);
         return response()->json(['message' => 'Liked']);
     } */
 
@@ -124,7 +124,7 @@ class PostController extends Controller
         }
 
         $like = Like::firstOrCreate([
-            'post_id' => $id,
+            'business_listing_post_id' => $id,
             'user_id' => Auth::id(),
         ]);
 
@@ -141,19 +141,19 @@ class PostController extends Controller
         $userId = Auth::id();
     
         // Check if the like already exists
-        $existingLike = Like::where('post_id', $id)->where('user_id', $userId)->first();
+        $existingLike = BusinessListingLike::where('business_listing_post_id', $id)->where('user_id', $userId)->first();
     
         if ($existingLike) {
             // Unlike the post (remove the like)
             $existingLike->delete();
-            return response()->json(['message' => 'Unliked', 'liked' => false, 'likes_count' => Like::where('post_id', $id)->count()]);
+            return response()->json(['message' => 'Unliked', 'liked' => false, 'likes_count' => BusinessListingLike::where('business_listing_post_id', $id)->count()]);
         } else {
             // Like the post
-            Like::create([
-                'post_id' => $id,
+            BusinessListingLike::create([
+                'business_listing_post_id' => $id,
                 'user_id' => $userId,
             ]);
-            return response()->json(['message' => 'Liked', 'liked' => true, 'likes_count' => Like::where('post_id', $id)->count()]);
+            return response()->json(['message' => 'Liked', 'liked' => true, 'likes_count' => BusinessListingLike::where('business_listing_post_id', $id)->count()]);
         }
     }
     
@@ -162,7 +162,7 @@ class PostController extends Controller
     /*public function comment(Request $request, $id)
     {
         $comment = Comment::create([
-            'post_id' => $id,
+            'business_listing_post_id' => $id,
             'content' => $request->content
         ]);
 
@@ -180,8 +180,8 @@ class PostController extends Controller
             'content' => 'nullable|string|max:500'
         ]);
 
-        $comment = Comment::create([
-            'post_id' => $id,
+        $comment = BusinessListingComment::create([
+            'business_listing_post_id' => $id,
             'user_id' => Auth::id(),
             'content' => $request->content
         ]);
@@ -192,7 +192,7 @@ class PostController extends Controller
 
     public function deleteComment($id)
     {
-        $comment = Comment::findOrFail($id);
+        $comment = BusinessListingComment::findOrFail($id);
         $comment->delete();
         return response()->json(['message' => 'Comment deleted successfully']);
     }
@@ -200,7 +200,7 @@ class PostController extends Controller
     //To Delete Post
     public function deletePost($id)
     {
-        $post = Post::findOrFail($id);
+        $post = BusinessListingPost::findOrFail($id);
 
         // Delete related comments and likes first
         $post->comments()->delete();
@@ -212,7 +212,7 @@ class PostController extends Controller
         return response()->json(['message' => 'Post deleted successfully']);
     }
 
-    public function updateComment (Request $request, Comment $comment)
+    public function updateComment (Request $request, BusinessListingComment $comment)
     {
         $request->validate([
             'content' => 'required|string|max:500',
@@ -227,7 +227,7 @@ class PostController extends Controller
     }
 
     //To update post
-    public function updatePost(Request $request, Post $post)
+    public function updatePost(Request $request, BusinessListingPost $post)
     {
         if (Auth::id() !== $post->user_id) {
             return response()->json(['message' => 'Unauthorized'], 403);

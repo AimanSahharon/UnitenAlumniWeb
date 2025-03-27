@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PostController;
+use App\Http\Controllers\BusinessListingController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -120,6 +121,24 @@ Route::get('/businesslistings', function () {
     return view('alumnihub.businesslistings');
 })->name('businesslistings');
 
+
+//Business Listings route
+Route::get('/businesslistingposts', [BusinessListingController::class, 'index']);
+Route::post('/businesslistingposts', [BusinessListingController::class, 'store'])->name('posts.store');
+Route::post('/businesslistingposts/{id}/like', [BusinessListingController::class, 'like']);
+Route::put('/businesslisting/{post}', [BusinessListingController::class, 'updatePost'])->middleware('auth');
+
+
+Route::post('/businesslistingposts/{id}/comment', [BusinessListingController::class, 'comment']);
+Route::delete('/businesslistingcomments/{id}', [BusinessListingController::class, 'deleteComment']);
+Route::delete('/businesslistingposts/{id}', [BusinessListingController::class, 'deletePost']);
+Route::post('/businesslistingposts/{id}/comment', [BusinessListingController::class, 'comment']);
+Route::get('/businesslistingposts/{id}/comments', function ($id) {
+    return response()->json(\App\Models\BusinessListingComment::where('business_listing_post_id', $id)->with('user')->get());
+});
+Route::delete('/businesslistingcomments/{id}', [BusinessListingController::class, 'deleteComment']);
+Route::get('/businesslistingposts/{postId}/comments', [BusinessListingController::class, 'getComments']);
+Route::put('/businesslistingcomments/{comment}', [BusinessListingController::class, 'updateComment']);
 
 
 
