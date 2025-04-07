@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
 use App\Models\UserData;
-
+use App\Models\Post;
 
 
 class UserController extends Controller
@@ -166,11 +166,13 @@ class UserController extends Controller
 
 
 
-    public function myPosts()
+    /*public function myPosts()
     {
-        $posts = Auth::user()->posts; // Assuming a relationship exists
+        $user = Auth::user(); // Get authenticated user
+        $posts = $user->posts; // Assuming a "posts" relationship exists in your User model
+    
         return view('profile.myposts', compact('posts'));
-    }
+    }*/
 
     public function myInterestGroup()
     {
@@ -190,6 +192,17 @@ class UserController extends Controller
         return view('alumni.posts', compact('alumnus', 'posts', 'user'));
     }
     
+    public function myPosts()
+    {
+         // Retrieve only posts made by the authenticated user
+        // Get only posts made by the authenticated user
+        $posts = Post::with('user', 'comments.user', 'likes')
+            ->where('user_id', Auth::id()) // Filter posts by authenticated user
+            ->latest()
+            ->get();
+        
+        return response()->json($posts);
+    }
 
 
     

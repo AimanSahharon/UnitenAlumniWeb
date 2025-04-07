@@ -5,6 +5,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\BusinessListingController;
 
+
 Route::get('/', function () {
     return view('welcome');
 });
@@ -62,9 +63,25 @@ Route::get('/info', function () {
 })->name('info');
 
 //Routes for Tabs in Profile Page
-Route::get('/myposts', function () {
+/*Route::get('/myposts', function () {
     return view('profile.myposts', ['user' => Auth::user()]);
-})->name('myposts')->middleware('auth');
+})->name('myposts')->middleware('auth'); */
+
+//Route::get('/myposts', [PostController::class, 'myPosts'])->name('myposts')->middleware('auth');
+Route::get('/myposts', [PostController::class, 'myPosts'])->name('myposts')->middleware('auth');
+
+
+//Route::get('/myposts', [PostController::class, 'myPosts'])->name('myposts');
+
+
+//Route::get('/myposts', [PostController::class, 'myPosts'])->name('myposts');
+
+
+
+
+
+
+
 
 Route::get('/myinterestgroup', function () {
     return view('profile.myinterestgroup', ['user' => Auth::user()]);

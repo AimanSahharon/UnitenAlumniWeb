@@ -267,16 +267,42 @@ class PostController extends Controller
         ]);
     }
 
-    
+    /*public function myPosts()
+    {
+         // Retrieve only posts made by the authenticated user
+        // Get only posts made by the authenticated user
+        $posts = Post::with('user', 'comments.user', 'likes')
+            ->where('user_id', Auth::id()) // Filter posts by authenticated user
+            ->latest()
+            ->get();
+        
+        return response()->json($posts);
+    }*/
 
 
+    public function myPosts()
+    {
+        $user = auth()->user(); // Get currently logged-in user
+        $posts = $user->posts()->with('comments.user')->latest()->get(); // Or however you're getting posts
+
+        return view('profile.myposts', compact('posts', 'user'));
+    } 
+
+    /*public function myPosts()
+    {
+        $userId = auth()->id();
+
+        $posts = Post::with(['user', 'comments.user', 'likes'])
+            ->withCount('likes')
+            ->where('user_id', $userId)
+            ->latest()
+            ->get();
+
+        return response()->json($posts);
+    }*/
 
 
-
-
-
-
-    
+       
 
 
 

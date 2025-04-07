@@ -82,6 +82,18 @@ class User extends Authenticatable
                 ]);
             }
         });
+
+        /* Code below is to insert IC, name and email data from registration page into profile page
+        
+        static::created(function ($user) {
+             UserData::create([
+                 'ic_passport' => $user->ic_passport, // Ensure this value exists
+                 'full_name' => $user->name,
+                 'email_address' => $user->email,
+             ]);
+         });
+        
+        */
     }
 
 }
