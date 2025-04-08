@@ -1,4 +1,4 @@
-@extends('layouts.alumnihub')
+@extends('layouts.profile')
 
 @section('tab-content')
     <div class="max-w-2xl mx-auto p-4" x-data="postApp({{ auth()->id() }})" x-init="fetchPosts()">
@@ -97,7 +97,7 @@
                
 
                 
-                <div class="flex space-x-4 mt-2">
+                <div class="flex items-center space-x-2 mt-2">
                     <!-- Like & Comment Buttons -->
                     <!--Like button -->
                     <button @click="likePost(post.id)" class="bg-blue-500 hover:bg-blue-700 text-white font-semibold px-2 py-1 rounded transition duration-200" style="background-color: blue; color: white;">

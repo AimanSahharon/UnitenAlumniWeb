@@ -1,4 +1,4 @@
-@extends('layouts.alumnihub')
+@extends('layouts.profile')
 
 @section('tab-content')
     <div class="max-w-2xl mx-auto p-4" x-data="postApp({{ auth()->id() }})" x-init="fetchPosts()">

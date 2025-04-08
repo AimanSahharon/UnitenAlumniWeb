@@ -2,6 +2,7 @@
 @extends('layouts.app')
 
 @section('content')  
+<script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script> <!-- Add this to display all the owner's posts -->
 <div class="profile-wrapper">
         <!-- Banner Image -->
      <div class="banner-container">
@@ -93,45 +94,6 @@
              opacity: 0.8;
          }
      </style>
- 
-     <!-- JavaScript for Displaying Selected File Name -->
-     <script>
-         function showFileName(input, fileNameId) {
-             const fileNameSpan = document.getElementById(fileNameId);
-             if (input.files.length > 0) {
-                 fileNameSpan.textContent = input.files[0].name;
-             } else {
-                 fileNameSpan.textContent = "No file selected";
-             }
-         }
-     </script>
- 
-
-    <!-- Tabs Navigation -->
-    <ul class="nav nav-tabs mt-4 d-flex justify-content-center" id="ProfileTabs" role="tablist">
-        <li class="nav-item">
-            <a class="nav-link {{ request()->is('profile') ? 'active' : '' }}" 
-                href="{{ route('profile', $user->id) }}">
-                 Info
-             </a>
-        </li>
-        
-        <li class="nav-item">
-            <a class="nav-link {{ request()->is('myposts') ? 'active' : '' }}" href="{{ route('myposts') }}">My Posts</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link {{ request()->is('myinterestgroup') ? 'active' : '' }}" href="{{ route('myinterestgroup') }}">My Interest Group</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link {{ request()->is('mybusinesslistings') ? 'active' : '' }}" href="{{ route('mybusinesslistings') }}">My Business Listing</a>
-        </li>
-    </ul>
-    
-    <!-- Dynamic Content Section -->
-    <div class="tab-content mt-3">
-        @yield('tab-content')
-    </div>
-</div>
 
 <style> 
     /* Profile Wrapper */
@@ -256,4 +218,45 @@
 }
 
 </style>
+ 
+     <!-- JavaScript for Displaying Selected File Name -->
+     <script>
+         function showFileName(input, fileNameId) {
+             const fileNameSpan = document.getElementById(fileNameId);
+             if (input.files.length > 0) {
+                 fileNameSpan.textContent = input.files[0].name;
+             } else {
+                 fileNameSpan.textContent = "No file selected";
+             }
+         }
+     </script>
+ 
+
+    <!-- Tabs Navigation -->
+    <ul class="nav nav-tabs mt-4 d-flex justify-content-center" id="ProfileTabs" role="tablist">
+        <li class="nav-item">
+            <a class="nav-link {{ request()->is('profile') ? 'active' : '' }}" 
+                href="{{ route('profile', $user->id) }}">
+                 Info
+             </a>
+        </li>
+        
+        <li class="nav-item">
+            <a class="nav-link {{ request()->is('myposts') ? 'active' : '' }}" href="{{ route('myposts') }}">My Posts</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link {{ request()->is('myinterestgroup') ? 'active' : '' }}" href="{{ route('myinterestgroup') }}">My Interest Group</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link {{ request()->is('mybusinesslistings') ? 'active' : '' }}" href="{{ route('mybusinesslistings') }}">My Business Listing</a>
+        </li>
+    </ul>
+    
+    <!-- Dynamic Content Section -->
+    <div class="tab-content mt-3">
+        @yield('tab-content')
+    </div>
+</div>
+
+
 @endsection
