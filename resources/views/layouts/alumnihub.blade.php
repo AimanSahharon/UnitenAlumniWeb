@@ -3,6 +3,7 @@
 
 @section('content')  
 <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+
 <div class="profile-wrapper">
     <!-- Tabs Navigation -->
     <ul class="nav nav-tabs mt-4 d-flex justify-content-center" id="ConnectAlumniTabs" role="tablist">

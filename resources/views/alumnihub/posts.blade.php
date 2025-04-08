@@ -1,6 +1,7 @@
 @extends('layouts.alumnihub')
 
 @section('tab-content')
+<link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet"> <!-- improve visual using Tailwind -->
     <div class="max-w-2xl mx-auto p-4" x-data="postApp({{ auth()->id() }})" x-init="fetchPosts()">
         <h2 class="text-xl font-bold mb-4">Create a Post</h2>
 

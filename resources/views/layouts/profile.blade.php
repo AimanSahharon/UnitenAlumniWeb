@@ -3,6 +3,7 @@
 
 @section('content')  
 <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script> <!-- Add this to display all the owner's posts -->
+
 <div class="profile-wrapper">
         <!-- Banner Image -->
      <div class="banner-container">

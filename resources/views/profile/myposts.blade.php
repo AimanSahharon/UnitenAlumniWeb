@@ -1,6 +1,7 @@
 @extends('layouts.profile')
 
 @section('tab-content')
+<link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet"> <!-- add this to make the posts buttons show horinzontally -->
     <div class="max-w-2xl mx-auto p-4" x-data="postApp({{ auth()->id() }})" x-init="fetchPosts()">
         <h2 class="text-xl font-bold mb-4">My Posts</h2>
 
@@ -97,7 +98,7 @@
                
 
                 
-                <div class="flex items-center space-x-2 mt-2">
+                <div class="flex space-x-4 mt-2">
                     <!-- Like & Comment Buttons -->
                     <!--Like button -->
                     <button @click="likePost(post.id)" class="bg-blue-500 hover:bg-blue-700 text-white font-semibold px-2 py-1 rounded transition duration-200" style="background-color: blue; color: white;">
