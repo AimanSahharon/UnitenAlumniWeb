@@ -15,7 +15,7 @@
                     <!-- IC or Passport textbox but cannot edit -->
                     <div class="input-group">
                         <label for="ic_passport"><strong>IC or Passport Number:</strong></label>
-                        <input type="text" name="ic_passport" value="{{ $user->userData->ic_passport ?? '' }}" readonly>
+                        <input type="text" name="ic_passport" value="{{ $user->userData->ic_passport ?? '' }}" disabled style="pointer-events: none;"> <!-- future note: replace readonly with disabled so that user cannot copy -->
                     </div>
                     
                     <!-- Full Name textbox -->

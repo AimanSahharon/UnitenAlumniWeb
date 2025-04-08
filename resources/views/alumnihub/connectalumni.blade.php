@@ -1,3 +1,4 @@
+<!--This page is to allow user to search other alumni -->
 @extends('layouts.alumnihub')
 
 @section('tab-content')

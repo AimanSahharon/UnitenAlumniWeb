@@ -192,18 +192,5 @@ class UserController extends Controller
         return view('alumni.posts', compact('alumnus', 'posts', 'user'));
     }
     
-    public function myPosts()
-    {
-        $user = auth()->user(); // Get currently logged-in user
-        $posts = $user->posts()->with('comments.user')->latest()->get(); // Or however you're getting posts
-
-        return view('profile.myposts', compact('posts', 'user'));
-    } 
-
-
-    
-
-    
-
 
 }

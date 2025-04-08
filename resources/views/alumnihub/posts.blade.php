@@ -163,9 +163,14 @@
                                     </template>
                                     
                         
-                                    <div x-show="comment.user_id === currentUserId" class="mt-1">
+                                    <div x-show="comment.user_id === currentUserId" class="mt-2 flex space-x-2">
                                         <!-- Edit Button -->
-                                        <button @click="editComment(comment)" class="bg-orange-500 hover:bg-orange-700 text-white font-semibold px-2 py-1 rounded transition duration-200" style="background-color: orange; color: white;">Edit</button>
+                                        <button @click="editComment(comment)"
+                                            class="bg-orange-500 hover:bg-orange-700 text-white font-semibold px-2 py-1 rounded transition duration-200"
+                                            style="background-color: orange; color: white;">
+                                            <span x-text="comment.editing ? 'Cancel' : 'Edit'"></span>
+                                        </button>
+
                                         <button @click="deleteComment(comment.id, post.id)" class="bg-red-500 hover:bg-red-700 text-white font-semibold px-2 py-1 rounded transition duration-200" style="background-color: red; color: white;">Delete</button>
                                         
                                         <!-- Save Button (Appears When Editing) -->
@@ -267,8 +272,12 @@
 
 
             editComment(comment) {
-                comment.editing = true;
-                comment.editedContent = comment.content || ''; // Pre-fill with existing content
+                //comment.editing = true;
+                //comment.editedContent = comment.content || ''; // Pre-fill with existing content
+                comment.editing = !comment.editing;
+                if (comment.editing) {
+                    comment.editedContent = comment.content || ''; // Pre-fill when entering edit mode
+                }
             },
 
             saveEditedComment(comment, postId) {
