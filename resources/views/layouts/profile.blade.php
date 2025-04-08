@@ -117,13 +117,13 @@
         </li>
         
         <li class="nav-item">
-            <a class="nav-link {{ request()->is('myposts') ? 'active' : '' }}" href="{{ route('myposts') }}">Posts</a>
+            <a class="nav-link {{ request()->is('myposts') ? 'active' : '' }}" href="{{ route('myposts') }}">My Posts</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link {{ request()->is('myinterestgroup') ? 'active' : '' }}" href="{{ route('myinterestgroup') }}">Interest Group</a>
+            <a class="nav-link {{ request()->is('myinterestgroup') ? 'active' : '' }}" href="{{ route('myinterestgroup') }}">My Interest Group</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link {{ request()->is('mybusinesslistings') ? 'active' : '' }}" href="{{ route('mybusinesslistings') }}">Business Listing</a>
+            <a class="nav-link {{ request()->is('mybusinesslistings') ? 'active' : '' }}" href="{{ route('mybusinesslistings') }}">My Business Listing</a>
         </li>
     </ul>
     

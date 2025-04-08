@@ -71,15 +71,6 @@ Route::get('/info', function () {
 Route::get('/myposts', [PostController::class, 'myPosts'])->name('myposts')->middleware('auth');
 
 
-//Route::get('/myposts', [PostController::class, 'myPosts'])->name('myposts');
-
-
-//Route::get('/myposts', [PostController::class, 'myPosts'])->name('myposts');
-
-
-
-
-
 
 
 
@@ -87,9 +78,11 @@ Route::get('/myinterestgroup', function () {
     return view('profile.myinterestgroup', ['user' => Auth::user()]);
 })->name('myinterestgroup')->middleware('auth');
 
-Route::get('/mybusinesslistings', function () {
+/*Route::get('/mybusinesslistings', function () {
     return view('profile.mybusinesslistings', ['user' => Auth::user()]);
-})->name('mybusinesslistings')->middleware('auth');
+})->name('mybusinesslistings')->middleware('auth'); */
+
+Route::get('/mybusinesslistings', [BusinessListingController::class, 'myBusinessListings'])->name('mybusinesslistings')->middleware('auth');
 
 
 
@@ -103,7 +96,7 @@ Route::get('/alumni/{id}', [UserController::class, 'show'])->name('alumni.show')
 
 
 
-
+//Routes for Posts
 Route::get('/posts.view', function () {
     return view('alumnihub.posts');
 })->name('posts.view');

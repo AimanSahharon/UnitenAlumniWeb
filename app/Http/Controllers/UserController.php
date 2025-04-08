@@ -194,15 +194,11 @@ class UserController extends Controller
     
     public function myPosts()
     {
-         // Retrieve only posts made by the authenticated user
-        // Get only posts made by the authenticated user
-        $posts = Post::with('user', 'comments.user', 'likes')
-            ->where('user_id', Auth::id()) // Filter posts by authenticated user
-            ->latest()
-            ->get();
-        
-        return response()->json($posts);
-    }
+        $user = auth()->user(); // Get currently logged-in user
+        $posts = $user->posts()->with('comments.user')->latest()->get(); // Or however you're getting posts
+
+        return view('profile.myposts', compact('posts', 'user'));
+    } 
 
 
     
