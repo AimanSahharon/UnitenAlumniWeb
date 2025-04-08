@@ -220,15 +220,19 @@
             },
 
             saveEditedPost(post) {
-                if (!post.editedContent.trim() && !post.imageFile && !post.editedImage) { //if the post is empty with empty spaces and does not have an image then display an error message
+                // Ensure editedContent is not null/undefined before calling trim
+                const editedContent = post.editedContent ? post.editedContent.trim() : '';
+                
+                if (!editedContent && !post.imageFile && !post.editedImage) {
+                    // If there's no content or image, show an error
                     alert("Post must have text or an image.");
                     return;
                 }
 
                 let formData = new FormData();
                 formData.append('_method', 'PUT'); // Required for Laravel to accept PUT
-                formData.append('content', post.editedContent.trim() || '');
-                
+                formData.append('content', editedContent || ''); // Use the trimmed content
+
                 if (post.imageFile) {
                     formData.append('image', post.imageFile);
                 }
