@@ -10,6 +10,7 @@ use App\Models\UserData;
 use App\Models\Post;
 
 
+
 class UserController extends Controller
 {
     public function updateProfile(Request $request)
@@ -191,6 +192,6 @@ class UserController extends Controller
 
         return view('alumni.posts', compact('alumnus', 'posts', 'user'));
     }
-    
+
 
 }

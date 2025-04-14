@@ -165,7 +165,7 @@
                         
                                     <div x-show="comment.user_id === currentUserId" class="mt-2 flex space-x-2">
                                         <!-- Edit Button -->
-                                         <!-- Edit Button -->
+                                        <!-- Edit Button -->
                                          <button @click="editComment(comment)"
                                          class="bg-orange-500 hover:bg-orange-700 text-white font-semibold px-2 py-1 rounded transition duration-200"
                                          style="background-color: orange; color: white;">
@@ -191,6 +191,7 @@
         </template>
     </div>
 
+    <!--Script below is Alpine.js to create function for posts e.g create postm edit and delete post -->
     <script>
         function postApp(currentUserId) {
         return {

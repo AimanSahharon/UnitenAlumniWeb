@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\BusinessListingController;
+use App\Http\Controllers\HomeController;
 
 
 Route::get('/', function () {
@@ -152,3 +153,13 @@ Route::put('/businesslistingcomments/{comment}', [BusinessListingController::cla
 
 
 
+
+//Admin Routes
+Route::get('/admin/home', [HomeController::class, 'card']);
+
+Route::get('/admin/home/add', function() {
+    return view('admin.edithome');
+});
+
+Route::get('/admin/home/create', [HomeController::class, 'create'])->name('cards.create');
+Route::post('/admin/home', [HomeController::class, 'store'])->name('cards.store');

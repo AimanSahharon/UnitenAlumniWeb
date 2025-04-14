@@ -191,6 +191,8 @@
         </template>
     </div>
 
+
+    <!--Script below is Alpine.js to create function for posts e.g create postm edit and delete post -->
     <script>
         function postApp(currentUserId) {
         return {
