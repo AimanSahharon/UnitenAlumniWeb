@@ -158,8 +158,12 @@ Route::put('/businesslistingcomments/{comment}', [BusinessListingController::cla
 Route::get('/admin/home', [HomeController::class, 'card']);
 
 Route::get('/admin/home/add', function() {
-    return view('admin.edithome');
-});
+    return view('admin.addcard');
+})->middleware('can:isAdmin');
 
-Route::get('/admin/home/create', [HomeController::class, 'create'])->name('cards.create');
-Route::post('/admin/home', [HomeController::class, 'store'])->name('cards.store');
+Route::get('/admin/home/create', [HomeController::class, 'create'])->name('cards.create')->middleware('can:isAdmin');
+Route::post('/admin/home', [HomeController::class, 'store'])->name('cards.store')->middleware('can:isAdmin');
+
+Route::get('/admin/home/{id}/edit', [HomeController::class, 'edit'])->name('cards.edit')->middleware('can:isAdmin');
+Route::put('/admin/home/{id}', [HomeController::class, 'update'])->name('cards.update')->middleware('can:isAdmin');
+Route::delete('/admin/home/{id}', [HomeController::class, 'destroy'])->name('cards.destroy')->middleware('can:isAdmin');

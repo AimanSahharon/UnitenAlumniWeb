@@ -1,9 +1,21 @@
 @extends('layouts.app')
 
 @section('content')
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-@foreach ($cards as $card)
+<!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script> -->
 
+
+<!-- Add Card Button (only for admins) -->
+@can('isAdmin')
+<div class="text-center my-4">
+    <a href="{{ url('/admin/home/add') }}" class="btn btn-primary">
+        Add Card
+    </a>
+</div>
+@endcan
+
+
+@foreach ($cards as $card)
 <!-- White Line OUTSIDE container -->
 <div class="white-line"></div>
 
@@ -40,6 +52,18 @@
                             </button>
                         </div>
                     @endif
+                    {{-- Only admins see Edit/Delete buttons --}}
+                    @can('isAdmin')
+                    <div class="mt-3 d-flex justify-content-center gap-2">
+                        <a href="{{ route('cards.edit', $card->id) }}" class="btn btn-sm btn-warning">Edit</a>
+                        <form action="{{ route('cards.destroy', $card->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this card?');">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+                        </form>
+                    </div>
+                    @endcan
+
                 </div>
             </div>
         </div>
@@ -47,7 +71,8 @@
 </div>
 @endforeach
 
-<style>
+<!--Add white line between the cards-->
+<style> 
     .white-line {
         width: 100vw;
         height: 2px;

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 use App\Models\Card;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class HomeController extends Controller
 {
@@ -60,4 +61,59 @@ class HomeController extends Controller
 
         return redirect('/admin/home')->with('success', 'Card created!');
     }
+
+        public function edit($id)
+    {
+        $card = Card::findOrFail($id);
+        return view('admin.editcard', compact('card'));
+    }
+
+        public function update(Request $request, $id)
+    {
+        $data = $request->validate([
+            'title' => 'required|string',
+            'content' => 'nullable|string',
+            'images.*' => 'nullable|image|mimes:jpg,jpeg,png,gif,webp'
+        ]);
+
+        $card = Card::findOrFail($id);
+
+        // Start with existing images
+        $existingImages = json_decode($card->images, true) ?? [];
+
+        // Handle image deletions BEFORE updating images
+        if ($request->has('delete_images')) {
+            foreach ($request->delete_images as $imagePath) {
+                if (($key = array_search($imagePath, $existingImages)) !== false) {
+                    unset($existingImages[$key]);
+                    Storage::disk('public')->delete($imagePath);
+                }
+            }
+        }
+
+        // Handle new image uploads
+        if ($request->hasFile('images')) {
+            foreach ($request->file('images') as $image) {
+                $existingImages[] = $image->store('uploads/cards', 'public');
+            }
+        }
+
+        // Update the card
+        $card->update([
+            'title' => $data['title'],
+            'content' => $data['content'] ?? '',
+            'images' => json_encode(array_values($existingImages)), // re-index
+        ]);
+
+        return redirect('/admin/home')->with('success', 'Card updated!');
+    }
+
+    public function destroy($id)
+    {
+        $card = Card::findOrFail($id);
+        $card->delete();
+
+        return redirect('/admin/home')->with('success', 'Card deleted!');
+    }
+
 }
