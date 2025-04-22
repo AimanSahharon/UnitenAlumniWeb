@@ -1,10 +1,11 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\BusinessListingController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\UserController;
 
 
 Route::get('/', function () {
@@ -36,7 +37,7 @@ Auth::routes();
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
 
-use App\Http\Controllers\UserController;
+
 
 Route::get('/profile', [UserController::class, 'profile'])->name('profile')->middleware('auth');
 Route::put('/profile/update', [UserController::class, 'updateProfile'])
@@ -167,3 +168,11 @@ Route::post('/admin/home', [HomeController::class, 'store'])->name('cards.store'
 Route::get('/admin/home/{id}/edit', [HomeController::class, 'edit'])->name('cards.edit')->middleware('can:isAdmin');
 Route::put('/admin/home/{id}', [HomeController::class, 'update'])->name('cards.update')->middleware('can:isAdmin');
 Route::delete('/admin/home/{id}', [HomeController::class, 'destroy'])->name('cards.destroy')->middleware('can:isAdmin');
+
+
+/*Route::get('/admin/dashboard', function() {
+    return view('admin.dashboard');
+})->middleware('can:isAdmin'); */
+
+Route::get('/admin/dashboard', [DashboardController::class, 'dashboard'])->name('dashboard')->middleware('can:isAdmin');
+
