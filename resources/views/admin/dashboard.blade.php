@@ -2,7 +2,7 @@
 
 @section('content')
 <div class="container-wrapper p-4 text-center">
-    <h2>Admin Dashboard</h2>
+    <h1>Admin Dashboard</h1>
     <h2>User Stats</h2>
     <ul style="list-style-type: none; padding: 0;">
         <li><strong>Total Registered Users:</strong> {{ $totalUsers }}</li>
@@ -12,7 +12,7 @@
     <p style="display: inline; margin-right: 10px;">Filter by:</p>
     <!-- Filter Dropdown -->
     <form method="GET" action="{{ route('dashboard') }}">
-        <select name="filter" onchange="this.form.submit()">
+        <select name="filter" style="text-align: center;" onchange="this.form.submit()">
             <option value="day" {{ $filter === 'day' ? 'selected' : '' }}>Day</option>
             <option value="month" {{ $filter === 'month' ? 'selected' : '' }}>Month</option>
             <option value="year" {{ $filter === 'year' ? 'selected' : '' }}>Year</option>
@@ -33,7 +33,7 @@
         ...postData.map(p => p.date),
         ...businessData.map(b => b.date),
         ...userData.map(u => u.date)
-    ])]; 
+    ])].sort((a, b) => new Date(a) - new Date(b)); // <-- sort dates ascending, when a - b and a comes after b then a comes after b else if a is before b then b is ahead of a
 
     // Format the labels based on the selected filter
     const formattedLabels = labels; // Keep raw date strings from backend
@@ -151,6 +151,7 @@
     </script>
 </div> <!-- end of container-wrapper -->
 
+<!--To create a white square background with rounded corner-->
 <style>
     .container-wrapper {
         max-width: 90%;

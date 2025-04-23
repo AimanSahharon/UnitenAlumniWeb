@@ -1,3 +1,5 @@
+<!-- This is to display Alumni's profile afer user select user from Connect Alumni Page -->
+
 @extends('layouts.alumnihub')
 
 @section('tab-content')
@@ -38,6 +40,7 @@
     </div>
 
     <a href="{{ route('connectalumni') }}" class="btn btn-secondary">Back to Search</a>
+    <br><br> <!--to create some space below-->
 </div>
 
 <!-- CSS to Style Profile Page -->

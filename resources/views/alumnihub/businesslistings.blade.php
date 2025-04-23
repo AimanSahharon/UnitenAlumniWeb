@@ -1,6 +1,10 @@
 @extends('layouts.alumnihub')
 
 @section('tab-content')
+<script> //to check if it is alumni or admin
+    window.currentUserId = {{ auth()->id() }};
+    window.userLevel = {{ auth()->user()->user_level }};
+</script>
 <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet"> <!-- improve visual using Tailwind -->
     <div class="max-w-2xl mx-auto p-4" x-data="postApp({{ auth()->id() }})" x-init="fetchPosts()">
         <h2 class="text-xl font-bold mb-4">Create a Business Listing</h2>
@@ -117,9 +121,9 @@
                     <button x-show="post.editing" @click="saveEditedPost(post)" class="bg-green-500 hover:bg-green-700 text-white font-semibold px-2 py-1 rounded transition duration-200" style="background-color: green; color: white;">Save</button>
 
 
-                    <!-- Delete Button (Only show if user owns the post) -->
+                    <!-- Delete Button (Only show if user owns the post or admin) -->
                     <button 
-                    x-show="post.user_id === currentUserId" 
+                    x-show="post.user_id === currentUserId || userLevel === 0" 
                     @click="deletePost(post.id)" 
                     class="bg-red-500 hover:bg-red-700 text-white font-semibold px-2 py-1 rounded transition duration-200" style="background-color: red; color: white;">
                     Delete
@@ -163,7 +167,7 @@
                                     </template>
                                     
                         
-                                    <div x-show="comment.user_id === currentUserId" class="mt-2 flex space-x-2">
+                                    <div x-show="comment.user_id === currentUserId || userLevel === 0" class="mt-2 flex space-x-2">
                                         <!-- Edit Button -->
                                          <!-- Edit Button -->
                                          <button @click="editComment(comment)"

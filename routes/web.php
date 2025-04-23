@@ -156,7 +156,7 @@ Route::put('/businesslistingcomments/{comment}', [BusinessListingController::cla
 
 
 //Admin Routes
-Route::get('/admin/home', [HomeController::class, 'card']);
+Route::get('/admin/home', [HomeController::class, 'card'])->name('admin.home');
 
 Route::get('/admin/home/add', function() {
     return view('admin.addcard');

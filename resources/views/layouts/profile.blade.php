@@ -96,129 +96,129 @@
          }
      </style>
 
-<style> 
-    /* Profile Wrapper */
-.profile-wrapper {
-    max-width: 90%;
-    width: 600px; /* Set max width similar to Twitter */
-    margin: 0 auto; /* Center it */
-    background: #ffffff;
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    overflow: hidden;
-    justify-content: center;
-    align-items: center;
-}
-
-/* Banner Image */
-.banner-container {
-    width: 100%;
-    height: 200px; /* Set banner height */
-    position: relative;
-    overflow: hidden;
-    background: #f5f5f5; /* Light grey background in case no banner */
-}
-
-.banner {
-    width: 100%;
-    height: 100%;
-    object-fit: cover; /* Ensures the image covers the div */
-}
-
-/* Profile Image */
-.profile-container {
-    position: absolute;
-    top: 200px; /* Adjusts overlap with the banner */
-    left: 40%;
-    transform: translateX(-50%);
-    width: 120px;
-    height: 120px;
-    border-radius: 50%;
-    overflow: hidden;
-    background: white;
-    border: 4px solid white;
-}
-
-.profile {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    border-radius: 50%;
-}
-
-/* Form Styling */
-.form-container {
-    margin-top: 70px;
-    padding: 20px;
-    text-align: center;
-}
-
-.form-container input {
-    display: block;
-    margin: 10px auto;
-} 
-
-.form-container button {
-    background: #1da1f2; /* Twitter blue */
-    color: white;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    display: block; /* Ensures block-level behavior */
-    margin: 20px auto; /* Centers horizontally */
-    text-align: center;
-}
-
-.form-container button:hover {
-    background: #0d8ae5;
-}
-
-.input-group {
-    display: flex;
-    align-items: center; /* Aligns text and input in the same line */
-    gap: 10px; /* Adds spacing between the label and input */
-    justify-content: center; /* Centers horizontally */
-    width: 100%; /* Ensures it takes up full width */
-    display: flex;
-    flex-direction: column; /* Stack label and input */
-    align-items: flex-start; /* Align labels and inputs on the left */
-    width: 100%;
-    margin-bottom: 15px; /* Space between fields */
-}
-
-.input-group label {
-    font-weight: bold;
-    margin-bottom: 5px; /* Space between label and input */
-}
-
-.input-group input, 
-.input-group select, 
-.input-group textarea {
-    width: 100%; /* Make all inputs take full width */
-    padding: 8px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-}
-
-@media screen and (max-width: 200px) {
+    <style> 
+        /* Profile Wrapper */
     .profile-wrapper {
-        max-width: 100%;
-        margin: 20px;
-        padding: 15px;
+        max-width: 90%;
+        width: 600px; /* Set max width similar to Twitter */
+        margin: 0 auto; /* Center it */
+        background: #ffffff;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+        justify-content: center;
+        align-items: center;
+    }
+
+    /* Banner Image */
+    .banner-container {
+        width: 100%;
+        height: 200px; /* Set banner height */
+        position: relative;
+        overflow: hidden;
+        background: #f5f5f5; /* Light grey background in case no banner */
+    }
+
+    .banner {
+        width: 100%;
+        height: 100%;
+        object-fit: cover; /* Ensures the image covers the div */
+    }
+
+    /* Profile Image */
+    .profile-container {
+        position: absolute;
+        top: 200px; /* Adjusts overlap with the banner */
+        left: 40%;
+        transform: translateX(-50%);
+        width: 120px;
+        height: 120px;
+        border-radius: 50%;
+        overflow: hidden;
+        background: white;
+        border: 4px solid white;
+    }
+
+    .profile {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: 50%;
+    }
+
+    /* Form Styling */
+    .form-container {
+        margin-top: 70px;
+        padding: 20px;
+        text-align: center;
+    }
+
+    .form-container input {
+        display: block;
+        margin: 10px auto;
+    } 
+
+    .form-container button {
+        background: #1da1f2; /* Twitter blue */
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        display: block; /* Ensures block-level behavior */
+        margin: 20px auto; /* Centers horizontally */
+        text-align: center;
+    }
+
+    .form-container button:hover {
+        background: #0d8ae5;
+    }
+
+    .input-group {
+        display: flex;
+        align-items: center; /* Aligns text and input in the same line */
+        gap: 10px; /* Adds spacing between the label and input */
+        justify-content: center; /* Centers horizontally */
+        width: 100%; /* Ensures it takes up full width */
+        display: flex;
+        flex-direction: column; /* Stack label and input */
+        align-items: flex-start; /* Align labels and inputs on the left */
+        width: 100%;
+        margin-bottom: 15px; /* Space between fields */
     }
 
     .input-group label {
-        font-size: 14px;
+        font-weight: bold;
+        margin-bottom: 5px; /* Space between label and input */
     }
 
-    .form-container button {
-        font-size: 14px;
-        padding: 10px;
+    .input-group input, 
+    .input-group select, 
+    .input-group textarea {
+        width: 100%; /* Make all inputs take full width */
+        padding: 8px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
     }
-}
 
-</style>
+    @media screen and (max-width: 200px) {
+        .profile-wrapper {
+            max-width: 100%;
+            margin: 20px;
+            padding: 15px;
+        }
+
+        .input-group label {
+            font-size: 14px;
+        }
+
+        .form-container button {
+            font-size: 14px;
+            padding: 10px;
+        }
+    }
+
+    </style>
  
      <!-- JavaScript for Displaying Selected File Name -->
      <script>
