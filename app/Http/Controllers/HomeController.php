@@ -25,6 +25,9 @@ class HomeController extends Controller
     public function index()
     {
         return view('home');
+        //the code below shows home page with cards added by the admin
+        /*$cards = Card::latest()->get();
+        return view('admin.home', compact('cards'));*/
     }
 
     public function card()
