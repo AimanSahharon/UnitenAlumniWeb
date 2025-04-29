@@ -21,9 +21,9 @@
 
     <canvas id="activityChart" height="100"></canvas>
 
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> <!--To use chart.js-->
     <script>
-    // Your JavaScript to render the chart
+    //JavaScript to render the chart
     const postData = @json($postsPerDay);
     const businessData = @json($businessListingsPerDay);
     const userData = @json($usersPerDay);

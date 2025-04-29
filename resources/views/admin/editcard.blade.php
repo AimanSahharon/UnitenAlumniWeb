@@ -2,84 +2,57 @@
 
 @section('content')
 <div class="container-wrapper">
-    <div class="container mt-4">
-        <h2 class="text-center mb-4">Edit Card</h2>
+    <form action="{{ route('cards.update', $card->id) }}" method="POST" enctype="multipart/form-data">
+        @csrf
+        @method('PUT')
+        <br>
 
-        <form action="{{ route('cards.update', $card->id) }}" method="POST" enctype="multipart/form-data">
-            @csrf
-            @method('PUT')
+        <input type="text" name="title" value="{{ old('title', $card->title) }}" required class="form-control mb-2">
 
-            {{-- Title Field --}}
-            <div class="mb-3">
-                <label for="title" class="form-label">Title</label>
-                <input 
-                    type="text" 
-                    class="form-control" 
-                    id="title" 
-                    name="title" 
-                    value="{{ old('title', $card->title) }}" 
-                    required>
-            </div>
+        <textarea name="content" class="form-control mb-2">{{ old('content', $card->content) }}</textarea>
 
-            {{-- Content Field --}}
-            <div class="mb-3">
-                <label for="content" class="form-label">Content</label>
-                <textarea 
-                    class="form-control" 
-                    id="content" 
-                    name="content" 
-                    rows="4">{{ old('content', $card->content) }}</textarea>
-            </div>
+        <label for="images">Upload New Images (optional):</label>
+        <input type="file" name="images[]" id="imageInput" multiple accept="image/*" class="form-control mb-3">
 
-            {{-- Image Upload --}}
-            <div class="mb-3">
-                <label for="images" class="form-label">Add New Images</label>
-                <input 
-                    type="file" 
-                    class="form-control" 
-                    name="images[]" 
-                    id="images" 
-                    multiple>
-            </div>
+        <!-- New section for dynamic URL inputs -->
+        <div id="newImageLinks"></div>
 
-            @if ($card->images)
-    @php
-        $images = json_decode($card->images, true);
-    @endphp
+        <h5>Existing Images</h5>
+        @php
+            $images = json_decode($card->images, true);
+            $links = json_decode($card->image_links, true);
+        @endphp
 
-                <div class="mb-3">
-                    <label class="form-label">Existing Images</label>
-                    <div class="row">
-                        @foreach ($images as $index => $image)
-                            <div class="col-md-6 mb-3 text-center">
-                                <img src="{{ asset('storage/' . $image) }}" class="img-fluid rounded mb-2" style="max-height: 150px;">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" name="delete_images[]" value="{{ $image }}" id="delete_{{ $index }}">
-                                    <label class="form-check-label" for="delete_{{ $index }}">
-                                        Delete
-                                    </label>
-                                </div>
-                            </div>
-                        @endforeach
+        @if ($images)
+            @foreach ($images as $index => $image)
+                <div class="mb-4">
+                    <img src="{{ asset('storage/' . $image) }}" alt="Image {{ $index+1 }}" class="img-thumbnail" style="max-height: 200px;">
+                    <br>
+                    <label>Link for this image (optional):</label>
+                    <input type="url" name="existing_image_links[]" value="{{ $links[$index] ?? '' }}" class="form-control mb-2">
+
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" name="delete_images[]" value="{{ $index }}" id="deleteImage{{ $index }}">
+                        <label class="form-check-label" for="deleteImage{{ $index }}">
+                            Delete this image
+                        </label>
                     </div>
                 </div>
-            @endif
+            @endforeach
+        @endif
 
-            {{-- Submit --}}
-            <div class="text-center mt-4">
-                <button type="submit" class="btn btn-primary me-2">Update</button>
-                <a href="{{ url('/admin/home') }}" class="btn btn-secondary">Cancel</a>
-            </div>
-            <br> <!--create some space between buttons and edge of container wrapper. Without this the edge of the container wrapper touches the bottom edges of the buttons -->
-        </form>
-    </div>
+        <div class="text-center">
+            <button type="submit" class="btn btn-primary">Update Card</button>
+        </div>
+        <br>
+    </form>
 </div>
 
 <style>
 .container-wrapper {
     max-width: 90%;
-    width: 600px; /* Set max width similar to Twitter */
-    margin: 0 auto; /* Center it */
+    width: 600px;
+    margin: 0 auto;
     background: #ffffff;
     border-radius: 10px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
@@ -88,4 +61,30 @@
     align-items: center;
 }
 </style>
+
+<!-- JavaScript for dynamic new image links -->
+<script>
+document.getElementById('imageInput').addEventListener('change', function(event) {
+    const container = document.getElementById('newImageLinks');
+    container.innerHTML = ''; // Clear previous inputs
+
+    const files = event.target.files;
+
+    for (let i = 0; i < files.length; i++) {
+        // Create label
+        const label = document.createElement('label');
+        label.textContent = `Link for new image ${i + 1} (optional):`;
+
+        // Create input
+        const input = document.createElement('input');
+        input.type = 'url';
+        input.name = 'new_image_links[]';
+        input.className = 'form-control mb-2';
+
+        // Append label and input
+        container.appendChild(label);
+        container.appendChild(input);
+    }
+});
+</script>
 @endsection

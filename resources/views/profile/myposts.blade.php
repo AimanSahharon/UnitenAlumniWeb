@@ -318,7 +318,7 @@
                     .then(res => res.json())
                     .then(data => {
                         this.posts = data
-                        .filter(post => post.user_id === this.currentUserId)
+                        .filter(post => post.user_id === this.currentUserId) //get only posts by the owner and ignor other people's posts
                         .map(post => ({ 
                         ...post, 
                         newComment: '', 

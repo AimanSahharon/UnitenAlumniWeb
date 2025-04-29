@@ -83,11 +83,7 @@
                         img.style.width = '100%';
                     }
                 ">
-
-                
-
             
-
                 <p class="text-sm text-gray-500">
                     <span x-text="new Date(post.created_at).toLocaleString()"></span>
                 </p>
@@ -97,10 +93,6 @@
                         Updated at: <span x-text="new Date(post.updated_at).toLocaleString()"></span>
                     </p>
                 </template>
-                
-
-               
-
                 
                 <div class="flex space-x-4 mt-2">
                     <!-- Like & Comment Buttons -->

@@ -15,8 +15,9 @@
 @endcan
 
 
+
+
 @foreach ($cards as $card)
-<!-- White Line OUTSIDE container -->
 <div class="white-line"></div>
 
 <div class="container">
@@ -31,15 +32,22 @@
 
                     @php
                         $images = json_decode($card->images, true);
+                        $links = json_decode($card->image_links, true);
                     @endphp
 
                     @if ($images && count($images) > 0)
                         <div id="carouselCard{{ $card->id }}" class="carousel slide" data-bs-ride="carousel">
                             <div class="carousel-inner">
                                 @foreach ($images as $index => $image)
-                                <div class="carousel-item {{ $index === 0 ? 'active' : '' }}">
-                                    <img src="{{ asset('storage/' . $image) }}" class="d-block w-100" alt="Card Image {{ $index + 1 }}">
-                                </div>
+                                    <div class="carousel-item {{ $index === 0 ? 'active' : '' }}">
+                                        @if (!empty($links) && isset($links[$index]) && $links[$index])
+                                            <a href="{{ $links[$index] }}" target="_blank">
+                                                <img src="{{ asset('storage/' . $image) }}" class="d-block w-100" alt="Card Image {{ $index + 1 }}">
+                                            </a>
+                                        @else
+                                            <img src="{{ asset('storage/' . $image) }}" class="d-block w-100" alt="Card Image {{ $index + 1 }}">
+                                        @endif
+                                    </div>
                                 @endforeach
                             </div>
                             <button class="carousel-control-prev" type="button" data-bs-target="#carouselCard{{ $card->id }}" data-bs-slide="prev">
@@ -52,7 +60,7 @@
                             </button>
                         </div>
                     @endif
-                    {{-- Only admins see Edit/Delete buttons --}}
+
                     @can('isAdmin')
                     <div class="mt-3 d-flex justify-content-center gap-2">
                         <a href="{{ route('cards.edit', $card->id) }}" class="btn btn-sm btn-warning">Edit</a>
@@ -63,13 +71,13 @@
                         </form>
                     </div>
                     @endcan
-
                 </div>
             </div>
         </div>
     </div>
 </div>
 @endforeach
+
 
 <!--Add white line between the cards-->
 <style> 
