@@ -6,6 +6,7 @@ use App\Http\Controllers\BusinessListingController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\BenefitController;
 
 
 Route::get('/', function () {
@@ -22,9 +23,15 @@ Route::get('/mycard', function() {
     return view('mycard');
 });
 
-Route::get('/benefits', function() {
+//Benefits Routes
+/*Route::get('/benefits', function() {
     return view('benefits');
-});
+}); */
+Route::get('/benefits', [BenefitController::class, 'index'])->name('benefits');
+
+
+
+
 
 Route::get('/alumnihub', function() {
     return view('alumnihub');
@@ -172,9 +179,26 @@ Route::put('/admin/home/{id}', [HomeController::class, 'update'])->name('cards.u
 Route::delete('/admin/home/{id}', [HomeController::class, 'destroy'])->name('cards.destroy')->middleware('can:isAdmin');
 
 
+
+
+
 /*Route::get('/admin/dashboard', function() {
     return view('admin.dashboard');
 })->middleware('can:isAdmin'); */
 
 Route::get('/admin/dashboard', [DashboardController::class, 'dashboard'])->name('dashboard')->middleware('can:isAdmin');
+
+
+//Admin Benefits Routes
+Route::get('/admin/benefits/add', function() {
+    return view('admin.addbenefit');
+})->middleware('can:isAdmin');
+
+Route::get('/admin/benefits/create', [BenefitController::class, 'create'])->name('benefits.create')->middleware('can:isAdmin');
+Route::post('/benefits', [BenefitController::class, 'store'])->name('benefits.store')->middleware('can:isAdmin');
+
+Route::get('/admin/benefits/{id}/edit', [BenefitController::class, 'edit'])->name('benefits.edit')->middleware('can:isAdmin');
+Route::put('/benefits/{id}', [BenefitController::class, 'update'])->name('benefits.update')->middleware('can:isAdmin');
+Route::delete('/benefits/{id}', [BenefitController::class, 'destroy'])->name('benefits.destroy')->middleware('can:isAdmin');
+
 

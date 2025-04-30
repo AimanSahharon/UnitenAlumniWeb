@@ -2,14 +2,14 @@
 
 @section('content')
 <div class="container-wrapper">
-    <form action="{{ route('cards.update', $card->id) }}" method="POST" enctype="multipart/form-data">
+    <form action="{{ route('benefits.update', $benefit->id) }}" method="POST" enctype="multipart/form-data">
         @csrf
         @method('PUT')
         <br>
 
-        <input type="text" name="title" value="{{ old('title', $card->title) }}" required class="form-control mb-2">
+        <input type="text" name="title" value="{{ old('title', $benefit->title) }}" required class="form-control mb-2">
 
-        <textarea name="content" class="form-control mb-2">{{ old('content', $card->content) }}</textarea>
+        <textarea name="content" class="form-control mb-2">{{ old('content', $benefit->content) }}</textarea>
 
         <label for="images">Upload New Images (optional):</label>
         <input type="file" name="images[]" id="imageInput" multiple accept="image/*" class="form-control mb-3">
@@ -19,8 +19,8 @@
 
         <h5>Existing Images</h5>
         @php
-            $images = json_decode($card->images, true);
-            $links = json_decode($card->image_links, true);
+            $images = json_decode($benefit->images, true);
+            $links = json_decode($benefit->image_links, true);
         @endphp
 
         @if ($images)
@@ -42,7 +42,7 @@
         @endif
 
         <div class="text-center">
-            <button type="submit" class="btn btn-primary">Update Card</button>
+            <button type="submit" class="btn btn-primary">Update benefit</button>
         </div>
         <br>
     </form>
